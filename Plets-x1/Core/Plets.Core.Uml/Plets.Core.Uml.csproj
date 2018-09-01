@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk" TargetFramework=".NETStandard,Version=v2.1" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>  
-    <AssemblyName>001-Xmi-Fsm-LoadRunner</AssemblyName>  
-    <OutputPath>../Build</OutputPath>  
-    <PletsVersion>Plets-x1</PletsVersion>
+    <AssemblyName>Plets.Shared.Uml</AssemblyName>  
+    <OutputPath>../../../Build</OutputPath>  
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
@@ -12,10 +11,7 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data" />
   </ItemGroup>
-  <ItemGroup>
-	<ProjectReference Include="../$(PletsVersion)/Core/Plets.Core.FiniteStateMachine/Plets.Core.FiniteStateMachine.csproj"></ProjectReference>
-	<ProjectReference Include="../$(PletsVersion)/Core/Plets.Core.Uml/Plets.Core.Uml.csproj"></ProjectReference>
-  </ItemGroup>
+  <!-- This library should not have any dependencies -->
   <ItemGroup>
     <Compile Include="./Source/*.cs" />
   </ItemGroup>
