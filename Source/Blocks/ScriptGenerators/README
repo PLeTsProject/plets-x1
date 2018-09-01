@@ -1,0 +1,3 @@
+SCRIPT GENERATOR:
+An script generator converts a test set to some technology-specific
+script that can be executed by some testing tool.

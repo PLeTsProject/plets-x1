@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk" TargetFramework=".NETStandard,Version=v2.1" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>  
+    <AssemblyName>Plets.Modeling.TestSuitStructure</AssemblyName>  
+    <OutputPath>../../build</OutputPath>  
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Plets.Core.ControlAndConversionStructures\Plets.Core.ControlAndConversionStructures.csproj">
+      <Project>{AC4DEDF3-8BC9-4B66-92C5-858A1AB00A27}</Project>
+      <Name>Plets.Core.ControlAndConversionStructures</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plets.Core.ControlStructure\Plets.Core.ControlStructure.csproj">
+      <Project>{FF241B72-D0B0-42A3-84E4-5B243E07F148}</Project>
+      <Name>Plets.Core.ControlStructure</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="./Source/*.cs" />
+  </ItemGroup>
+  <Target Name="Build">  
+    <Csc Sources="@(Compile)" References="@(Reference)" OutputAssembly="$(OutputPath)/$(AssemblyName).dll" />
+  </Target>  
+</Project>

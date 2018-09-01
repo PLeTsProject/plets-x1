@@ -1,0 +1,4 @@
+TEST SET GENERATOR:
+A test set generator compiles several annotated test sequences into
+a single data structure that ressembles abstract testing scripts. This 
+structure is later given as parameter to some script generator.
