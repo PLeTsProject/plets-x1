@@ -29,10 +29,10 @@ We have three different components in this project.
 
 The following picture illustrate the relation between these three kind of components.
 
-![Relation between types of components.](https://raw.githubusercontent.com/andersondomingues/plets-x1/master/docs/plets-x1%20-%20core%2C%20shared%20and%20blocks.png)
+![Relation between types of components.](https://raw.githubusercontent.com/andersondomingues/plets-x1/master/Docs/plets-x1%20-%20core%2C%20shared%20and%20blocks.png)
 
 For now, we aim to provide the following blocks (in yellow) and core structures (in orange).
 
-![Block and core structures.](https://raw.githubusercontent.com/andersondomingues/plets-x1/master/docs/Plets-x1-level2-diagram.png)
+![Block and core structures.](https://raw.githubusercontent.com/andersondomingues/plets-x1/master/Docs/Plets-x1-level2-diagram.png)
 
 No shared lib is being used, but we intend to do so in a near future.
