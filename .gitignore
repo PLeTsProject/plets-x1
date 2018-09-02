@@ -4,9 +4,9 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 #ignore generated build files
-**/build/*/*.deps.json
-**/build/*/*.dll
-**/build/*/*.pdb
+**/Build/*/*.deps.json
+**/Build/*/*.dll
+**/Build/*/*.pdb
 
 
 #mac shit
