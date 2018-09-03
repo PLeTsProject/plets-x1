@@ -36,3 +36,11 @@ For now, we aim to provide the following blocks (in yellow) and core structures 
 ![Block and core structures.](https://raw.githubusercontent.com/andersondomingues/plets-x1/master/Docs/Plets-x1-level2-diagram.png)
 
 No shared lib is being used, but we intend to do so in a near future.
+
+## How to clone this repo
+
+First, you need to clone this repo by entering the following command.
+
+`git clone https://github.com/PLeTsProject/plets-x1.git --recurse-submodules`
+
+Please be aware that the you will be also cloning submodules' code and the operation may take a while. Each submodule has its own repository and pull requests should address them.
