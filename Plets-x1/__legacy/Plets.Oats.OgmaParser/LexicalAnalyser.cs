@@ -1,9 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace Lesse.OATS.OgmaParser
-{
+namespace Lesse.OATS.OgmaParser {
     /*
      * As explained in the Ogma class header, LexicalAnalyser is responsible for both the Lexical and 
      * Syntactic analysis. It is recommended that a certain order be followed in reading this class,
@@ -36,29 +35,26 @@ namespace Lesse.OATS.OgmaParser
      *      This rule is implemented in a slightly different way from the rest of this class, and should
      *      be of some interest.
      */
-    internal class LexicalAnalyser
-    {
+    internal class LexicalAnalyser {
         private List<string> reservedWords;
         private InputQueue inputQueue;
 
-        internal LexicalAnalyser()
-        {
+        internal LexicalAnalyser () {
             /*
              * The "reserved words" represent all Terminal constant tokens.
              */
-            reservedWords = new List<string>();
+            reservedWords = new List<string> ();
 
-            reservedWords.Add("import");
+            reservedWords.Add ("import");
         }
 
         /*
          * This is the starting point of the Lexicon construction process, making a call to the OATS 
          * function, representing the first rule of the CFG.
          */
-        internal Tuple<ClassNode, InputQueue> BuildLexicon(InputQueue inputQueue)
-        {
+        internal Tuple<ClassNode, InputQueue> BuildLexicon (InputQueue inputQueue) {
             this.inputQueue = inputQueue;
-            return new Tuple<ClassNode, InputQueue>(OATS(this.inputQueue.Pop()), this.inputQueue);
+            return new Tuple<ClassNode, InputQueue> (OATS (this.inputQueue.Pop ()), this.inputQueue);
         }
 
         /*
@@ -71,8 +67,7 @@ namespace Lesse.OATS.OgmaParser
          * 
          * OATS -> LIST_IMPORT CLASS
          */
-        private ClassNode OATS(string input)
-        {
+        private ClassNode OATS (string input) {
 #if DEBUG
             DateTime startTime = DateTime.Now;
 #endif
@@ -88,22 +83,21 @@ namespace Lesse.OATS.OgmaParser
              * derivation being available, or it will forward the exception further down the recursion 
              * stack.
              */
-            ClassNode toReturn = new ClassNode(Classes.Oats);
+            ClassNode toReturn = new ClassNode (Classes.Oats);
             /*
              * This variable serves as a backup of the current state of the input script at
              * the time this rule validation began. Should a rule validation fail, the input script
              * state is reset to this point for the checking of further derivation options.
              */
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
             /* 
              * A single "try" block always represents the validation of a rule. The typical contents of
              * this block are a sequence of function calls for each rule comprising one derivation option.
              */
-            try
-            {
-                toReturn.Derivations.Add(LIST_IMPORT(input));
-                toReturn.Derivations.Add(CLASS(inputQueue.Pop()));
+            try {
+                toReturn.Derivations.Add (LIST_IMPORT (input));
+                toReturn.Derivations.Add (CLASS (inputQueue.Pop ()));
             }
             /*
              * A "catch" block represents the failure of a derivation. Within it, there are typically two
@@ -113,28 +107,26 @@ namespace Lesse.OATS.OgmaParser
              * that is, should it have the possibility of deriving Epsilon, then the last "catch" block
              * should be the Epsilon treatment.
              */
-            catch (FormatException e)
-            {
+            catch (FormatException e) {
                 /*
                  * Before attempting the derivation of another rule option, or returning the exception
                  * that signals the failure of a derivation, the input state is returned to the point
                  * recorded in the backup state.
                  */
 #if DEBUG
-                inputQueue.PrintTokenList("TokenizationListCriticalError.txt");
+                inputQueue.PrintTokenList ("TokenizationListCriticalError.txt");
 #endif
 
                 inputQueue = backupInput;
-                throw new FormatException("Input " + input + " and following terms are not of OATS type; " + e.Message);
+                throw new FormatException ("Input " + input + " and following terms are not of OATS type; " + e.Message);
             }
 
 #if DEBUG
-            inputQueue.PrintTokenList("TokenizationTestEnd.txt");
-            toReturn.PrintSyntaxTree("SyntaxTree.txt", inputQueue);
+            inputQueue.PrintTokenList ("TokenizationTestEnd.txt");
+            toReturn.PrintSyntaxTree ("SyntaxTree.txt", inputQueue);
             DateTime currentTime = DateTime.Now;
-            using (StreamWriter writer = new StreamWriter("SyntaxTime.txt"))
-            {
-                writer.WriteLine(currentTime - startTime);
+            using (StreamWriter writer = new StreamWriter ("SyntaxTime.txt")) {
+                writer.WriteLine (currentTime - startTime);
             }
 #endif
             return toReturn;
@@ -146,18 +138,14 @@ namespace Lesse.OATS.OgmaParser
          * LIST_IMPORT -> IMPORT LIST_IMPORT
          *              | Epsilon
          */
-        private ClassNode LIST_IMPORT(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.List_Import);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode LIST_IMPORT (string input) {
+            ClassNode toReturn = new ClassNode (Classes.List_Import);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
-                toReturn.Derivations.Add(IMPORT(input));
-                toReturn.Derivations.Add(LIST_IMPORT(inputQueue.Pop()));
-            }
-            catch (FormatException e)
-            {
+            try {
+                toReturn.Derivations.Add (IMPORT (input));
+                toReturn.Derivations.Add (LIST_IMPORT (inputQueue.Pop ()));
+            } catch (FormatException e) {
                 /*
                  * This is a case where a "catch" block is being used to validate an "Epsilon" derivation.
                  * First, the inputQueue is reset to the backup state. Due to its failure, none of the 
@@ -168,9 +156,9 @@ namespace Lesse.OATS.OgmaParser
                  * represents the absence of a symbol, no tokens should be consumed by it.
                  */
                 inputQueue = backupInput;
-                toReturn.Derivations = new List<ClassNode>();
-                toReturn.Derivations.Add(new ClassNode(Classes.Epsilon));
-                inputQueue.DecrementPointer();
+                toReturn.Derivations = new List<ClassNode> ();
+                toReturn.Derivations.Add (new ClassNode (Classes.Epsilon));
+                inputQueue.DecrementPointer ();
             }
 
             return toReturn;
@@ -202,22 +190,20 @@ namespace Lesse.OATS.OgmaParser
          * IMPORT -> 'import' IDENTIFIER IDENTIFIER2 ';'
          * Has split.
          */
-        private ClassNode IMPORT(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Import);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode IMPORT (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Import);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
+            try {
                 /*
                  * An "if-else" block structured in this way represents an attempt to identify a reserved
                  * word token. Since the constant 'import' is mandatory to this rule, entering the "else"
                  * statement implies a failed validation, causing an exception to be thrown.
                  */
-                if (input.Equals("import"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (input.Equals ("import"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
                 /*
                  * It is important to note that whenever a terminal symbol is added to the syntax tree,
@@ -235,21 +221,19 @@ namespace Lesse.OATS.OgmaParser
                  * and then at period. The InputQueue will rearrange itself during these calls and can continue
                  * to be used as normal.
                  */
-                inputQueue.SplitItem(";");
-                inputQueue.SplitItem(".");
+                inputQueue.SplitItem (";");
+                inputQueue.SplitItem (".");
 
-                toReturn.Derivations.Add(IDENTIFIER(inputQueue.Pop()));
-                toReturn.Derivations.Add(IDENTIFIER2(inputQueue.Pop()));
+                toReturn.Derivations.Add (IDENTIFIER (inputQueue.Pop ()));
+                toReturn.Derivations.Add (IDENTIFIER2 (inputQueue.Pop ()));
 
-                if (inputQueue.Pop().Equals(";"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals (";"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
-            }
-            catch (FormatException e)
-            {
+                    throw new FormatException ();
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                throw new FormatException("Input " + input + " and following terms are not of IMPORT type; " + e.Message);
+                throw new FormatException ("Input " + input + " and following terms are not of IMPORT type; " + e.Message);
             }
 
             return toReturn;
@@ -260,13 +244,11 @@ namespace Lesse.OATS.OgmaParser
          * 
          * IDENTIFIER -> [A-za-z0-9]+
          */
-        private ClassNode IDENTIFIER(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Identifier);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode IDENTIFIER (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Identifier);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
+            try {
                 /*
                  * Because IDENTIFIER is a Terminal Symbol, it must read the value of input itself, rather
                  * than attempt to apply further derivation rules. To do this, we have used Regular Expressions.
@@ -280,16 +262,14 @@ namespace Lesse.OATS.OgmaParser
                  * If a match is not found, then the Terminal Symbol validation has failed and an Exception is
                  * thrown.
                  */
-                Regex toCheck = new Regex(@"^[A-za-z0-9]+$");
-                if (toCheck.Match(input).Success)
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                Regex toCheck = new Regex (@"^[A-za-z0-9]+$");
+                if (toCheck.Match (input).Success)
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
-            }
-            catch (FormatException e)
-            {
+                    throw new FormatException ();
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                throw new FormatException("Input " + input + " and following terms are not of IDENTIFIER type; " + e.Message);
+                throw new FormatException ("Input " + input + " and following terms are not of IDENTIFIER type; " + e.Message);
             }
 
             return toReturn;
@@ -301,27 +281,23 @@ namespace Lesse.OATS.OgmaParser
          * IDENTIFIER2 -> '.' IDENTIFIER IDENTIFIER3
          *              | Epsilon
          */
-        private ClassNode IDENTIFIER2(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Identifier2);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode IDENTIFIER2 (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Identifier2);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
-                if (input.Equals("."))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+            try {
+                if (input.Equals ("."))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                toReturn.Derivations.Add(IDENTIFIER(inputQueue.Pop()));
-                toReturn.Derivations.Add(IDENTIFIER3(inputQueue.Pop()));
-            }
-            catch (FormatException e)
-            {
+                toReturn.Derivations.Add (IDENTIFIER (inputQueue.Pop ()));
+                toReturn.Derivations.Add (IDENTIFIER3 (inputQueue.Pop ()));
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                toReturn.Derivations = new List<ClassNode>();
-                toReturn.Derivations.Add(new ClassNode(Classes.Epsilon));
-                inputQueue.DecrementPointer();
+                toReturn.Derivations = new List<ClassNode> ();
+                toReturn.Derivations.Add (new ClassNode (Classes.Epsilon));
+                inputQueue.DecrementPointer ();
             }
 
             return toReturn;
@@ -331,27 +307,23 @@ namespace Lesse.OATS.OgmaParser
          * IDENTIFIER3 is an auxiliary rule to derive identifiers interspaced with periods and ending in *.
          * 
          * IDENTIFIER3 -> '.' '*'
-		 *  		    | IDENTIFIER2
+         *  		    | IDENTIFIER2
          */
-        private ClassNode IDENTIFIER3(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Identifier3);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode IDENTIFIER3 (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Identifier3);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
-                if (input.Equals("."))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+            try {
+                if (input.Equals ("."))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                if (inputQueue.Pop().Equals("*"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals ("*"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
-            }
-            catch (FormatException)
-            {
+                    throw new FormatException ();
+            } catch (FormatException) {
                 /*
                  * This is a case where the "catch" block is being used to validate a second derivation
                  * option. Because the previous derivation failed, the inputQueue is reset to the backup
@@ -361,16 +333,13 @@ namespace Lesse.OATS.OgmaParser
                  * the next rule in the same way as a normal try-catch block.
                  */
                 inputQueue = backupInput;
-                toReturn.Derivations = new List<ClassNode>();
+                toReturn.Derivations = new List<ClassNode> ();
 
-                try
-                {
-                    toReturn.Derivations.Add(IDENTIFIER2(input));
-                }
-                catch (FormatException e)
-                {
+                try {
+                    toReturn.Derivations.Add (IDENTIFIER2 (input));
+                } catch (FormatException e) {
                     inputQueue = backupInput;
-                    throw new FormatException("Input " + input + " and following terms are not of IDENTIFIER3 type; " + e.Message);
+                    throw new FormatException ("Input " + input + " and following terms are not of IDENTIFIER3 type; " + e.Message);
                 }
             }
 
@@ -382,28 +351,24 @@ namespace Lesse.OATS.OgmaParser
          * 
          * CLASS ->	CLASS_DECLARATION '{' BODY '}'
          */
-        private ClassNode CLASS(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Class);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode CLASS (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Class);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
-                toReturn.Derivations.Add(CLASS_DECLARATION(input));
-                if (inputQueue.Pop().Equals("{"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+            try {
+                toReturn.Derivations.Add (CLASS_DECLARATION (input));
+                if (inputQueue.Pop ().Equals ("{"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
-                toReturn.Derivations.Add(BODY(inputQueue.Pop()));
-                if (inputQueue.Pop().Equals("}"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                    throw new FormatException ();
+                toReturn.Derivations.Add (BODY (inputQueue.Pop ()));
+                if (inputQueue.Pop ().Equals ("}"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
-            }
-            catch (FormatException e)
-            {
+                    throw new FormatException ();
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                throw new FormatException("Input " + input + " and following terms are not of CLASS type; " + e.Message);
+                throw new FormatException ("Input " + input + " and following terms are not of CLASS type; " + e.Message);
             }
 
             return toReturn;
@@ -414,22 +379,20 @@ namespace Lesse.OATS.OgmaParser
          * 
          * CLASS_DECLARATION -> 'public' 'class' [A-Za-z][A-Za-z0-9_]* 'extends' 'IteratingVUserScript'
          */
-        private ClassNode CLASS_DECLARATION(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Class_Declaration);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode CLASS_DECLARATION (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Class_Declaration);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
-                if (input.Equals("public"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+            try {
+                if (input.Equals ("public"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                if (inputQueue.Pop().Equals("class"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals ("class"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
                 /*
                  * The reason why we have placed a regular expression within a Non-Terminal Symbol is 
@@ -438,26 +401,24 @@ namespace Lesse.OATS.OgmaParser
                  * be created to represent it. Otherwise, it can be regarded in the same way as a Reserved 
                  * Word.
                  */
-                Regex toCheck = new Regex(@"^[A-Za-z][A-Za-z0-9_]*$");
-                if (toCheck.Match(inputQueue.Pop()).Success)
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                Regex toCheck = new Regex (@"^[A-Za-z][A-Za-z0-9_]*$");
+                if (toCheck.Match (inputQueue.Pop ()).Success)
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                if (inputQueue.Pop().Equals("extends"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals ("extends"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                if (inputQueue.Pop().Equals("IteratingVUserScript"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals ("IteratingVUserScript"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
-            }
-            catch (FormatException e)
-            {
+                    throw new FormatException ();
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                throw new FormatException("Input " + input + " and following terms are not of CLASS_DECLARATION type; " + e.Message);
+                throw new FormatException ("Input " + input + " and following terms are not of CLASS_DECLARATION type; " + e.Message);
             }
 
             return toReturn;
@@ -468,23 +429,19 @@ namespace Lesse.OATS.OgmaParser
          * 
          * BODY -> SCRIPT_SERVICE METHODS
          */
-        private ClassNode BODY(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Body);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode BODY (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Body);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
+            try {
 #if DEBUG
-                inputQueue.PrintTokenList("TokenizationListAtStartOfBody.txt");
+                inputQueue.PrintTokenList ("TokenizationListAtStartOfBody.txt");
 #endif
-                toReturn.Derivations.Add(SCRIPT_SERVICE(input));
-                toReturn.Derivations.Add(METHODS(inputQueue.Pop()));
-            }
-            catch (FormatException e)
-            {
+                toReturn.Derivations.Add (SCRIPT_SERVICE (input));
+                toReturn.Derivations.Add (METHODS (inputQueue.Pop ()));
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                throw new FormatException("Input " + input + " and following terms are not of BODY type; " + e.Message);
+                throw new FormatException ("Input " + input + " and following terms are not of BODY type; " + e.Message);
             }
 
             return toReturn;
@@ -497,40 +454,36 @@ namespace Lesse.OATS.OgmaParser
          *                 | Epsilon
          * Has split.
          */
-        private ClassNode SCRIPT_SERVICE(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Script_Service);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode SCRIPT_SERVICE (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Script_Service);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
-                if (input.Equals("@ScriptService"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+            try {
+                if (input.Equals ("@ScriptService"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                inputQueue.SplitItem(".");
+                inputQueue.SplitItem (".");
 
-                toReturn.Derivations.Add(IDENTIFIER(inputQueue.Pop()));
-                toReturn.Derivations.Add(IDENTIFIER2(inputQueue.Pop()));
+                toReturn.Derivations.Add (IDENTIFIER (inputQueue.Pop ()));
+                toReturn.Derivations.Add (IDENTIFIER2 (inputQueue.Pop ()));
 
-                inputQueue.SplitItem(";");
+                inputQueue.SplitItem (";");
 
-                toReturn.Derivations.Add(IDENTIFIER(inputQueue.Pop()));
+                toReturn.Derivations.Add (IDENTIFIER (inputQueue.Pop ()));
 
-                if (inputQueue.Pop().Equals(";"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals (";"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                toReturn.Derivations.Add(SCRIPT_SERVICE(inputQueue.Pop()));
-            }
-            catch (FormatException e)
-            {
+                toReturn.Derivations.Add (SCRIPT_SERVICE (inputQueue.Pop ()));
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                toReturn.Derivations = new List<ClassNode>();
-                toReturn.Derivations.Add(new ClassNode(Classes.Epsilon));
-                inputQueue.DecrementPointer();
+                toReturn.Derivations = new List<ClassNode> ();
+                toReturn.Derivations.Add (new ClassNode (Classes.Epsilon));
+                inputQueue.DecrementPointer ();
             }
 
             return toReturn;
@@ -541,20 +494,16 @@ namespace Lesse.OATS.OgmaParser
          * 
          * METHODS -> JAVADOC METHODS2
          */
-        private ClassNode METHODS(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Methods);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode METHODS (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Methods);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
-                toReturn.Derivations.Add(JAVADOC(input));
-                toReturn.Derivations.Add(METHODS2(inputQueue.Pop()));
-            }
-            catch (FormatException e)
-            {
+            try {
+                toReturn.Derivations.Add (JAVADOC (input));
+                toReturn.Derivations.Add (METHODS2 (inputQueue.Pop ()));
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                throw new FormatException("Input " + input + " and following terms are not of METHODS type; " + e.Message);
+                throw new FormatException ("Input " + input + " and following terms are not of METHODS type; " + e.Message);
             }
 
             return toReturn;
@@ -566,22 +515,18 @@ namespace Lesse.OATS.OgmaParser
          * METHODS2 -> METHOD METHODS
          *           | Epsilon
          */
-        private ClassNode METHODS2(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Methods2);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode METHODS2 (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Methods2);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
-                toReturn.Derivations.Add(METHOD(input));
-                toReturn.Derivations.Add(METHODS(inputQueue.Pop()));
-            }
-            catch (FormatException e)
-            {
+            try {
+                toReturn.Derivations.Add (METHOD (input));
+                toReturn.Derivations.Add (METHODS (inputQueue.Pop ()));
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                toReturn.Derivations = new List<ClassNode>();
-                toReturn.Derivations.Add(new ClassNode(Classes.Epsilon));
-                inputQueue.DecrementPointer();
+                toReturn.Derivations = new List<ClassNode> ();
+                toReturn.Derivations.Add (new ClassNode (Classes.Epsilon));
+                inputQueue.DecrementPointer ();
             }
 
             return toReturn;
@@ -593,21 +538,18 @@ namespace Lesse.OATS.OgmaParser
          * 
          * ANY -> [A-Za-z0-9,\(\)\[\]/\*&_#\- ""]*
          */
-        private ClassNode ANY(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Any);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode ANY (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Any);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
-                Regex toCheck = new Regex(@"^[A-Za-z0-9,\(\)\[\]/\*&_#\- ""]*$");
-                if (!toCheck.Match(input).Success)
-                    throw new FormatException();
-            }
-            catch (FormatException e)
-            {
+            try {
+                Regex toCheck = new Regex (@"^[A-Za-z0-9,\(\)\[\]/\*&_#\- "
+                    "]*$");
+                if (!toCheck.Match (input).Success)
+                    throw new FormatException ();
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                throw new FormatException("Input " + input + " and following terms are not of ANY type; " + e.Message);
+                throw new FormatException ("Input " + input + " and following terms are not of ANY type; " + e.Message);
             }
 
             return toReturn;
@@ -622,30 +564,26 @@ namespace Lesse.OATS.OgmaParser
          * ANY2 -> ANY_JAVADOC ANY2
          *       | Epsilon
          */
-        private ClassNode ANY2(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Any2);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode ANY2 (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Any2);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
+            try {
                 /*
                  * This is the specialization mentioned above. Once the input reaches this specific
                  * token, the sequence ends.
                  */
-                Regex toCheck = new Regex(@"^[\*]*/$");
-                if (toCheck.Match(input).Success)
-                    throw new FormatException();
+                Regex toCheck = new Regex (@"^[\*]*/$");
+                if (toCheck.Match (input).Success)
+                    throw new FormatException ();
 
-                toReturn.Derivations.Add(ANY_JAVADOC(input));
-                toReturn.Derivations.Add(ANY2(inputQueue.Pop()));
-            }
-            catch (FormatException e)
-            {
+                toReturn.Derivations.Add (ANY_JAVADOC (input));
+                toReturn.Derivations.Add (ANY2 (inputQueue.Pop ()));
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                toReturn.Derivations = new List<ClassNode>();
-                toReturn.Derivations.Add(new ClassNode(Classes.Epsilon));
-                inputQueue.DecrementPointer();
+                toReturn.Derivations = new List<ClassNode> ();
+                toReturn.Derivations.Add (new ClassNode (Classes.Epsilon));
+                inputQueue.DecrementPointer ();
             }
 
             return toReturn;
@@ -658,28 +596,24 @@ namespace Lesse.OATS.OgmaParser
          * ANY3 -> ANY_JAVADOC ANY3
          *       | Epsilon
          */
-        private ClassNode ANY3(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Any3);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode ANY3 (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Any3);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
-                inputQueue.SplitItem("\"");
+            try {
+                inputQueue.SplitItem ("\"");
 
-                Regex toCheck = new Regex("^\"$");
-                if (toCheck.Match(input).Success)
-                    throw new FormatException();
+                Regex toCheck = new Regex ("^\"$");
+                if (toCheck.Match (input).Success)
+                    throw new FormatException ();
 
-                toReturn.Derivations.Add(ANY_JAVADOC(input));
-                toReturn.Derivations.Add(ANY3(inputQueue.Pop()));
-            }
-            catch (FormatException e)
-            {
+                toReturn.Derivations.Add (ANY_JAVADOC (input));
+                toReturn.Derivations.Add (ANY3 (inputQueue.Pop ()));
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                toReturn.Derivations = new List<ClassNode>();
-                toReturn.Derivations.Add(new ClassNode(Classes.Epsilon));
-                inputQueue.DecrementPointer();
+                toReturn.Derivations = new List<ClassNode> ();
+                toReturn.Derivations.Add (new ClassNode (Classes.Epsilon));
+                inputQueue.DecrementPointer ();
             }
 
             return toReturn;
@@ -690,21 +624,18 @@ namespace Lesse.OATS.OgmaParser
          * 
          * ANY_JAVADOC -> [A-Za-z0-9,.:\(\)\[\]/\*&_#\-=+ ""]*
          */
-        private ClassNode ANY_JAVADOC(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Any_Javadoc);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode ANY_JAVADOC (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Any_Javadoc);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
-                Regex toCheck = new Regex(@"^[A-Za-z0-9,.:\(\)\[\]/\*&_#\-=+ ""]*$");
-                if (!toCheck.Match(input).Success)
-                    throw new FormatException();
-            }
-            catch (FormatException e)
-            {
+            try {
+                Regex toCheck = new Regex (@"^[A-Za-z0-9,.:\(\)\[\]/\*&_#\-=+ "
+                    "]*$");
+                if (!toCheck.Match (input).Success)
+                    throw new FormatException ();
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                throw new FormatException("Input " + input + " and following terms are not of ANY type; " + e.Message);
+                throw new FormatException ("Input " + input + " and following terms are not of ANY type; " + e.Message);
             }
 
             return toReturn;
@@ -716,33 +647,29 @@ namespace Lesse.OATS.OgmaParser
          * JAVADOC -> /\*\* ANY2 [\*]* /
          *          | Epsilon
          */
-        private ClassNode JAVADOC(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Javadoc);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode JAVADOC (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Javadoc);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
-                Regex toCheck = new Regex(@"^/\*\*$");
-                if (toCheck.Match(input).Success)
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+            try {
+                Regex toCheck = new Regex (@"^/\*\*$");
+                if (toCheck.Match (input).Success)
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                toReturn.Derivations.Add(ANY2(inputQueue.Pop()));
+                toReturn.Derivations.Add (ANY2 (inputQueue.Pop ()));
 
-                toCheck = new Regex(@"^[\*]*/$");
-                if (toCheck.Match(inputQueue.Pop()).Success)
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                toCheck = new Regex (@"^[\*]*/$");
+                if (toCheck.Match (inputQueue.Pop ()).Success)
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
-            }
-            catch (FormatException e)
-            {
+                    throw new FormatException ();
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                toReturn.Derivations = new List<ClassNode>();
-                toReturn.Derivations.Add(new ClassNode(Classes.Epsilon));
-                inputQueue.DecrementPointer();
+                toReturn.Derivations = new List<ClassNode> ();
+                toReturn.Derivations.Add (new ClassNode (Classes.Epsilon));
+                inputQueue.DecrementPointer ();
             }
 
             return toReturn;
@@ -753,35 +680,31 @@ namespace Lesse.OATS.OgmaParser
          * 
          * METHOD -> METHOD_DECLARATION '{' BLOCK '}'
          */
-        private ClassNode METHOD(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Method);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode METHOD (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Method);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
-                toReturn.Derivations.Add(METHOD_DECLARATION(input));
+            try {
+                toReturn.Derivations.Add (METHOD_DECLARATION (input));
 
-                if (inputQueue.Pop().Equals("{"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals ("{"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
 #if DEBUG
-                inputQueue.PrintTokenList("TokenizationTestBeforeMethodBody.txt");
+                inputQueue.PrintTokenList ("TokenizationTestBeforeMethodBody.txt");
 #endif
 
-                toReturn.Derivations.Add(BLOCK(inputQueue.Pop()));
+                toReturn.Derivations.Add (BLOCK (inputQueue.Pop ()));
 
-                if (inputQueue.Pop().Equals("}"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals ("}"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
-            }
-            catch (FormatException e)
-            {
+                    throw new FormatException ();
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                throw new FormatException("Input " + input + " and following terms are not of METHOD type; " + e.Message);
+                throw new FormatException ("Input " + input + " and following terms are not of METHOD type; " + e.Message);
             }
 
             return toReturn;
@@ -792,35 +715,31 @@ namespace Lesse.OATS.OgmaParser
          * 
          * METHOD_DECLARATION -> 'public' 'void' ([A-Za-z][A-Za-z0-9_]*)\(\) METHOD_DECLARATION2
          */
-        private ClassNode METHOD_DECLARATION(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Method_Declaration);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode METHOD_DECLARATION (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Method_Declaration);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
-                if (input.Equals("public"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+            try {
+                if (input.Equals ("public"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                if (inputQueue.Pop().Equals("void"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals ("void"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                Regex toCheck = new Regex(@"^([A-Za-z][A-Za-z0-9_]*)\(\)$");
-                if (toCheck.Match(inputQueue.Pop()).Success)
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                Regex toCheck = new Regex (@"^([A-Za-z][A-Za-z0-9_]*)\(\)$");
+                if (toCheck.Match (inputQueue.Pop ()).Success)
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                toReturn.Derivations.Add(METHOD_DECLARATION2(inputQueue.Pop()));
-            }
-            catch (FormatException e)
-            {
+                toReturn.Derivations.Add (METHOD_DECLARATION2 (inputQueue.Pop ()));
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                throw new FormatException("Input " + input + " and following terms are not of METHOD_DECLARATION type; " + e.Message);
+                throw new FormatException ("Input " + input + " and following terms are not of METHOD_DECLARATION type; " + e.Message);
             }
 
             return toReturn;
@@ -832,29 +751,25 @@ namespace Lesse.OATS.OgmaParser
          * METHOD_DECLARATION2 -> 'throws' 'Exception'
          *                      | Epsilon
          */
-        private ClassNode METHOD_DECLARATION2(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Method_Declaration2);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode METHOD_DECLARATION2 (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Method_Declaration2);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
-                if (input.Equals("throws"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+            try {
+                if (input.Equals ("throws"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                if (inputQueue.Pop().Equals("Exception"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals ("Exception"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
-            }
-            catch (FormatException e)
-            {
+                    throw new FormatException ();
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                toReturn.Derivations = new List<ClassNode>();
-                toReturn.Derivations.Add(new ClassNode(Classes.Epsilon));
-                inputQueue.DecrementPointer();
+                toReturn.Derivations = new List<ClassNode> ();
+                toReturn.Derivations.Add (new ClassNode (Classes.Epsilon));
+                inputQueue.DecrementPointer ();
             }
 
             return toReturn;
@@ -868,32 +783,25 @@ namespace Lesse.OATS.OgmaParser
          *        | Epsilon
          * Has split.
          */
-        private ClassNode BLOCK(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Block);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode BLOCK (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Block);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
-                toReturn.Derivations.Add(SCRIPT_ELEMENT(input));
-                toReturn.Derivations.Add(THINK(inputQueue.Pop()));
-                toReturn.Derivations.Add(BLOCK(inputQueue.Pop()));
-            }
-            catch (FormatException)
-            {
+            try {
+                toReturn.Derivations.Add (SCRIPT_ELEMENT (input));
+                toReturn.Derivations.Add (THINK (inputQueue.Pop ()));
+                toReturn.Derivations.Add (BLOCK (inputQueue.Pop ()));
+            } catch (FormatException) {
                 inputQueue = backupInput;
-                toReturn.Derivations = new List<ClassNode>();
-                try
-                {
-                    toReturn.Derivations.Add(STEP(input));
-                    toReturn.Derivations.Add(BLOCK(inputQueue.Pop()));
-                }
-                catch (FormatException e)
-                {
+                toReturn.Derivations = new List<ClassNode> ();
+                try {
+                    toReturn.Derivations.Add (STEP (input));
+                    toReturn.Derivations.Add (BLOCK (inputQueue.Pop ()));
+                } catch (FormatException e) {
                     inputQueue = backupInput;
-                    toReturn.Derivations = new List<ClassNode>();
-                    toReturn.Derivations.Add(new ClassNode(Classes.Epsilon));
-                    inputQueue.DecrementPointer();
+                    toReturn.Derivations = new List<ClassNode> ();
+                    toReturn.Derivations.Add (new ClassNode (Classes.Epsilon));
+                    inputQueue.DecrementPointer ();
                 }
             }
 
@@ -906,56 +814,52 @@ namespace Lesse.OATS.OgmaParser
          * THINK ->	'{' 'think' '(' NUMBER ')' ';' '}'
          *        | Epsilon
          */
-        private ClassNode THINK(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Think);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode THINK (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Think);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
-                inputQueue.SplitItem(";");
-                inputQueue.SplitItem(")");
-                inputQueue.SplitItem(".");
-                inputQueue.SplitItem("(");
+            try {
+                inputQueue.SplitItem (";");
+                inputQueue.SplitItem (")");
+                inputQueue.SplitItem (".");
+                inputQueue.SplitItem ("(");
 
-                if (input.Equals("{"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (input.Equals ("{"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                if (inputQueue.Pop().Equals("think"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals ("think"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                if (inputQueue.Pop().Equals("("))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals ("("))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                toReturn.Derivations.Add(NUMBER(inputQueue.Pop()));
+                toReturn.Derivations.Add (NUMBER (inputQueue.Pop ()));
 
-                if (inputQueue.Pop().Equals(")"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals (")"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                if (inputQueue.Pop().Equals(";"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals (";"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                if (inputQueue.Pop().Equals("}"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals ("}"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
-            }
-            catch (FormatException e)
-            {
+                    throw new FormatException ();
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                toReturn.Derivations = new List<ClassNode>();
-                toReturn.Derivations.Add(new ClassNode(Classes.Epsilon));
-                inputQueue.DecrementPointer();
+                toReturn.Derivations = new List<ClassNode> ();
+                toReturn.Derivations.Add (new ClassNode (Classes.Epsilon));
+                inputQueue.DecrementPointer ();
             }
 
             return toReturn;
@@ -966,25 +870,21 @@ namespace Lesse.OATS.OgmaParser
          * 
          * NUMBER -> [0-9]+ NUMBER2
          */
-        private ClassNode NUMBER(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Number);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode NUMBER (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Number);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
-                Regex toCheck = new Regex(@"^[0-9]+$");
-                if (toCheck.Match(input).Success)
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+            try {
+                Regex toCheck = new Regex (@"^[0-9]+$");
+                if (toCheck.Match (input).Success)
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                toReturn.Derivations.Add(NUMBER2(inputQueue.Pop()));
-            }
-            catch (FormatException e)
-            {
+                toReturn.Derivations.Add (NUMBER2 (inputQueue.Pop ()));
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                throw new FormatException("Input " + input + " and following terms are not of NUMBER type; " + e.Message);
+                throw new FormatException ("Input " + input + " and following terms are not of NUMBER type; " + e.Message);
             }
 
             return toReturn;
@@ -996,30 +896,26 @@ namespace Lesse.OATS.OgmaParser
          * NUMBER2 -> '.' [0-9]+
          *          | Epsilon
          */
-        private ClassNode NUMBER2(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Number2);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode NUMBER2 (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Number2);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
-                if (input.Equals("."))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+            try {
+                if (input.Equals ("."))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                Regex toCheck = new Regex(@"^[0-9]+$");
-                if (toCheck.Match(inputQueue.Pop()).Success)
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                Regex toCheck = new Regex (@"^[0-9]+$");
+                if (toCheck.Match (inputQueue.Pop ()).Success)
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
-            }
-            catch (FormatException e)
-            {
+                    throw new FormatException ();
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                toReturn.Derivations = new List<ClassNode>();
-                toReturn.Derivations.Add(new ClassNode(Classes.Epsilon));
-                inputQueue.DecrementPointer();
+                toReturn.Derivations = new List<ClassNode> ();
+                toReturn.Derivations.Add (new ClassNode (Classes.Epsilon));
+                inputQueue.DecrementPointer ();
             }
 
             return toReturn;
@@ -1030,46 +926,42 @@ namespace Lesse.OATS.OgmaParser
          * 
          * STEP -> BEGIN_STEP '{' ELEMENT_SEQUENCE '}' CLOSE_STEP
          */
-        private ClassNode STEP(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Step);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode STEP (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Step);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
-                inputQueue.DecrementPointer();
+            try {
+                inputQueue.DecrementPointer ();
 
-                inputQueue.SplitItem("\"");
-                inputQueue.SplitItem("(");
+                inputQueue.SplitItem ("\"");
+                inputQueue.SplitItem ("(");
 
-                toReturn.Derivations.Add(BEGIN_STEP(inputQueue.Pop()));
+                toReturn.Derivations.Add (BEGIN_STEP (inputQueue.Pop ()));
 
 #if DEBUG
-                inputQueue.PrintTokenList("TokenizationTestAfterFirstBeginStepRule.txt");
+                inputQueue.PrintTokenList ("TokenizationTestAfterFirstBeginStepRule.txt");
 #endif
 
-                if (inputQueue.Pop().Equals("{"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals ("{"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                toReturn.Derivations.Add(ELEMENT_SEQUENCE(inputQueue.Pop()));
+                toReturn.Derivations.Add (ELEMENT_SEQUENCE (inputQueue.Pop ()));
 
-                if (inputQueue.Pop().Equals("}"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals ("}"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                toReturn.Derivations.Add(CLOSE_STEP(inputQueue.Pop()));
+                toReturn.Derivations.Add (CLOSE_STEP (inputQueue.Pop ()));
 
 #if DEBUG
-                inputQueue.PrintTokenList("TokenizationTestAfterFirstStepRule.txt");
+                inputQueue.PrintTokenList ("TokenizationTestAfterFirstStepRule.txt");
 #endif
-            }
-            catch (FormatException e)
-            {
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                throw new FormatException("Input " + input + " and following terms are not of STEP type; " + e.Message);
+                throw new FormatException ("Input " + input + " and following terms are not of STEP type; " + e.Message);
             }
 
             return toReturn;
@@ -1080,48 +972,44 @@ namespace Lesse.OATS.OgmaParser
          * 
          * BEGIN_STEP -> 'beginStep' '(' STEP_NAME ',' NUMBER ')' ';'
          */
-        private ClassNode BEGIN_STEP(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Begin_Step);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode BEGIN_STEP (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Begin_Step);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
-                if (input.Equals("beginStep"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+            try {
+                if (input.Equals ("beginStep"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                if (inputQueue.Pop().Equals("("))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals ("("))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                toReturn.Derivations.Add(STEP_NAME(inputQueue.Pop()));
+                toReturn.Derivations.Add (STEP_NAME (inputQueue.Pop ()));
 
-                if (inputQueue.Pop().Equals(","))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals (","))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                inputQueue.SplitItem(")");
+                inputQueue.SplitItem (")");
 
-                toReturn.Derivations.Add(NUMBER(inputQueue.Pop()));
+                toReturn.Derivations.Add (NUMBER (inputQueue.Pop ()));
 
-                if (inputQueue.Pop().Equals(")"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals (")"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                if (inputQueue.Pop().Equals(";"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals (";"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
-            }
-            catch (FormatException e)
-            {
+                    throw new FormatException ();
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                throw new FormatException("Input " + input + " and following terms are not of BEGIN_STEP type; " + e.Message);
+                throw new FormatException ("Input " + input + " and following terms are not of BEGIN_STEP type; " + e.Message);
             }
 
             return toReturn;
@@ -1132,29 +1020,25 @@ namespace Lesse.OATS.OgmaParser
          * 
          * STEP_NAME ->	'"' ANY3 '"'
          */
-        private ClassNode STEP_NAME(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Step_Name);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode STEP_NAME (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Step_Name);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
-                if (input.Equals("\""))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+            try {
+                if (input.Equals ("\""))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                toReturn.Derivations.Add(ANY3(inputQueue.Pop()));
+                toReturn.Derivations.Add (ANY3 (inputQueue.Pop ()));
 
-                if (inputQueue.Pop().Equals("\""))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals ("\""))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
-            }
-            catch (FormatException e)
-            {
+                    throw new FormatException ();
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                throw new FormatException("Input " + input + " and following terms are not of STEP_NAME type; " + e.Message);
+                throw new FormatException ("Input " + input + " and following terms are not of STEP_NAME type; " + e.Message);
             }
 
             return toReturn;
@@ -1165,22 +1049,18 @@ namespace Lesse.OATS.OgmaParser
          * 
          * CLOSE_STEP -> 'endStep();'
          */
-        private ClassNode CLOSE_STEP(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Close_Step);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode CLOSE_STEP (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Close_Step);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
-                if (input.Equals("endStep();"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+            try {
+                if (input.Equals ("endStep();"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
-            }
-            catch (FormatException e)
-            {
+                    throw new FormatException ();
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                throw new FormatException("Input " + input + " and following terms are not of CLOSE_STEP type; " + e.Message);
+                throw new FormatException ("Input " + input + " and following terms are not of CLOSE_STEP type; " + e.Message);
             }
 
             return toReturn;
@@ -1192,23 +1072,19 @@ namespace Lesse.OATS.OgmaParser
          * ELEMENT_SEQUENCE -> SCRIPT_ELEMENT THINK ELEMENT_SEQUENCE
          *                   | Epsilon
          */
-        private ClassNode ELEMENT_SEQUENCE(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Element_Sequence);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode ELEMENT_SEQUENCE (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Element_Sequence);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
-                toReturn.Derivations.Add(SCRIPT_ELEMENT(input));
-                toReturn.Derivations.Add(THINK(inputQueue.Pop()));
-                toReturn.Derivations.Add(ELEMENT_SEQUENCE(inputQueue.Pop()));
-            }
-            catch (FormatException e)
-            {
+            try {
+                toReturn.Derivations.Add (SCRIPT_ELEMENT (input));
+                toReturn.Derivations.Add (THINK (inputQueue.Pop ()));
+                toReturn.Derivations.Add (ELEMENT_SEQUENCE (inputQueue.Pop ()));
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                toReturn.Derivations = new List<ClassNode>();
-                toReturn.Derivations.Add(new ClassNode(Classes.Epsilon));
-                inputQueue.DecrementPointer();
+                toReturn.Derivations = new List<ClassNode> ();
+                toReturn.Derivations.Add (new ClassNode (Classes.Epsilon));
+                inputQueue.DecrementPointer ();
             }
 
             return toReturn;
@@ -1219,67 +1095,63 @@ namespace Lesse.OATS.OgmaParser
          * 
          * ELEMENT_NAME -> '"' '{' '{' ANY '.' ANY '.' ANY '}' '}' '"'
          */
-        private ClassNode ELEMENT_NAME(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Element_Name);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode ELEMENT_NAME (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Element_Name);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
-                if (input.Equals("\""))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+            try {
+                if (input.Equals ("\""))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                inputQueue.SplitItem("}");
-                inputQueue.SplitItem(".");
-                inputQueue.SplitItem("{");
+                inputQueue.SplitItem ("}");
+                inputQueue.SplitItem (".");
+                inputQueue.SplitItem ("{");
 
-                if (inputQueue.Pop().Equals("{"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals ("{"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                if (inputQueue.Pop().Equals("{"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals ("{"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                toReturn.Derivations.Add(ANY(inputQueue.Pop()));
+                toReturn.Derivations.Add (ANY (inputQueue.Pop ()));
 
-                if (inputQueue.Pop().Equals("."))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals ("."))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                toReturn.Derivations.Add(ANY(inputQueue.Pop()));
+                toReturn.Derivations.Add (ANY (inputQueue.Pop ()));
 
-                if (inputQueue.Pop().Equals("."))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals ("."))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                toReturn.Derivations.Add(ANY(inputQueue.Pop()));
+                toReturn.Derivations.Add (ANY (inputQueue.Pop ()));
 
-                if (inputQueue.Pop().Equals("}"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals ("}"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                if (inputQueue.Pop().Equals("}"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals ("}"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                if (inputQueue.Pop().Equals("\""))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals ("\""))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
-            }
-            catch (FormatException e)
-            {
+                    throw new FormatException ();
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                throw new FormatException("Input " + input + " and following terms are not of ELEMENT_NAME type; " + e.Message);
+                throw new FormatException ("Input " + input + " and following terms are not of ELEMENT_NAME type; " + e.Message);
             }
 
             return toReturn;
@@ -1290,40 +1162,36 @@ namespace Lesse.OATS.OgmaParser
          * 
          * ACTION -> ANY '(' ACTION2 ')'
          */
-        private ClassNode ACTION(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Action);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode ACTION (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Action);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
+            try {
 #if DEBUG
-                if (input.Equals("setPassword"))
-                    inputQueue.PrintTokenList("TokenizationTestBeforeSetPassword.txt");
+                if (input.Equals ("setPassword"))
+                    inputQueue.PrintTokenList ("TokenizationTestBeforeSetPassword.txt");
 #endif
 
-                toReturn.Derivations.Add(ANY(input));
+                toReturn.Derivations.Add (ANY (input));
 
-                if (inputQueue.Pop().Equals("("))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals ("("))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                inputQueue.SplitItem(")");
+                inputQueue.SplitItem (")");
 
-                toReturn.Derivations.Add(ACTION2(inputQueue.Pop()));
+                toReturn.Derivations.Add (ACTION2 (inputQueue.Pop ()));
 
-                inputQueue.SplitItem(")");
+                inputQueue.SplitItem (")");
 
-                if (inputQueue.Pop().Equals(")"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals (")"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
-            }
-            catch (FormatException e)
-            {
+                    throw new FormatException ();
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                throw new FormatException("Input " + input + " and following terms are not of ACTION type; " + e.Message);
+                throw new FormatException ("Input " + input + " and following terms are not of ACTION type; " + e.Message);
             }
 
             return toReturn;
@@ -1333,57 +1201,48 @@ namespace Lesse.OATS.OgmaParser
          * ACTION2 is an auxiliary rule to ACTION, allowing for nested action symbols.
          * 
          * ACTION2 -> ACTION
-		 *			| ANY
+         *			| ANY
          *			| '"' ANY3 '"'
-		 *		    | Epsilon
+         *		    | Epsilon
          */
-        private ClassNode ACTION2(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Action2);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode ACTION2 (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Action2);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
 #if DEBUG
-            inputQueue.PrintTokenList("TokenizationTestBeforeAction2.txt");
+            inputQueue.PrintTokenList ("TokenizationTestBeforeAction2.txt");
 #endif
 
-            try
-            {
-                toReturn.Derivations.Add(ACTION(input));
-            }
-            catch (FormatException)
-            {
+            try {
+                toReturn.Derivations.Add (ACTION (input));
+            } catch (FormatException) {
                 inputQueue = backupInput;
-                toReturn.Derivations = new List<ClassNode>();
-                try
-                {
-                    if (input.Equals(")"))
-                        throw new FormatException();
-                    else if (input.StartsWith("\""))
-                    {
-                        inputQueue.DecrementPointer();
-                        inputQueue.SplitItem("\"");
+                toReturn.Derivations = new List<ClassNode> ();
+                try {
+                    if (input.Equals (")"))
+                        throw new FormatException ();
+                    else if (input.StartsWith ("\"")) {
+                        inputQueue.DecrementPointer ();
+                        inputQueue.SplitItem ("\"");
 
-                        if (inputQueue.Pop().Equals("\""))
-                            toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                        if (inputQueue.Pop ().Equals ("\""))
+                            toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                         else
-                            throw new FormatException();
+                            throw new FormatException ();
 
-                        toReturn.Derivations.Add(ANY3(inputQueue.Pop()));
+                        toReturn.Derivations.Add (ANY3 (inputQueue.Pop ()));
 
-                        if (inputQueue.Pop().Equals("\""))
-                            toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                        if (inputQueue.Pop ().Equals ("\""))
+                            toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                         else
-                            throw new FormatException();
-                    }
-                    else
-                        toReturn.Derivations.Add(ANY(input));
-                }
-                catch (FormatException)
-                {
+                            throw new FormatException ();
+                    } else
+                        toReturn.Derivations.Add (ANY (input));
+                } catch (FormatException) {
                     inputQueue = backupInput;
-                    toReturn.Derivations = new List<ClassNode>();
-                    toReturn.Derivations.Add(new ClassNode(Classes.Epsilon));
-                    inputQueue.DecrementPointer();
+                    toReturn.Derivations = new List<ClassNode> ();
+                    toReturn.Derivations.Add (new ClassNode (Classes.Epsilon));
+                    inputQueue.DecrementPointer ();
                 }
             }
 
@@ -1397,78 +1256,73 @@ namespace Lesse.OATS.OgmaParser
          * ease of identifying which one to use.
          * 
          * SCRIPT_ELEMENT -> WEB_WINDOW
-		 *			       | WEB_TEXTBOX
-		 *			       | WEB_BUTTON
-		 *			       | WEB_IMAGE
-		 *			       | WEB_ALERT_DIALOG
-		 *			       | WEB_LINK
-		 *			       | BROWSER_LAUNCH
-		 *                 | WEB_ELEMENT
+         *			       | WEB_TEXTBOX
+         *			       | WEB_BUTTON
+         *			       | WEB_IMAGE
+         *			       | WEB_ALERT_DIALOG
+         *			       | WEB_LINK
+         *			       | BROWSER_LAUNCH
+         *                 | WEB_ELEMENT
          */
-        private ClassNode SCRIPT_ELEMENT(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Script_Element);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode SCRIPT_ELEMENT (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Script_Element);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
-                inputQueue.DecrementPointer();
+            try {
+                inputQueue.DecrementPointer ();
 
-                inputQueue.SplitItem(";");
-                inputQueue.SplitItem(")");
-                inputQueue.SplitItem("(");
+                inputQueue.SplitItem (";");
+                inputQueue.SplitItem (")");
+                inputQueue.SplitItem ("(");
 
-                string toCheck = inputQueue.Pop();
+                string toCheck = inputQueue.Pop ();
 
-                switch (toCheck)
-                {
+                switch (toCheck) {
                     case "web.window":
-                        toReturn.Derivations.Add(WEB_WINDOW(toCheck));
+                        toReturn.Derivations.Add (WEB_WINDOW (toCheck));
                         break;
                     case "web.textBox":
-                        toReturn.Derivations.Add(WEB_TEXTBOX(toCheck));
+                        toReturn.Derivations.Add (WEB_TEXTBOX (toCheck));
                         break;
                     case "web.button":
-                        toReturn.Derivations.Add(WEB_BUTTON(toCheck));
+                        toReturn.Derivations.Add (WEB_BUTTON (toCheck));
                         break;
                     case "web.image":
-                        toReturn.Derivations.Add(WEB_IMAGE(toCheck));
+                        toReturn.Derivations.Add (WEB_IMAGE (toCheck));
                         break;
                     case "web.alertDialog":
-                        toReturn.Derivations.Add(WEB_ALERT_DIALOG(toCheck));
+                        toReturn.Derivations.Add (WEB_ALERT_DIALOG (toCheck));
                         break;
                     case "web.link":
-                        toReturn.Derivations.Add(WEB_LINK(toCheck));
+                        toReturn.Derivations.Add (WEB_LINK (toCheck));
                         break;
                     case "web.element":
-                        toReturn.Derivations.Add(WEB_ELEMENT(toCheck));
+                        toReturn.Derivations.Add (WEB_ELEMENT (toCheck));
                         break;
                     case "web.selectBox":
-                        toReturn.Derivations.Add(WEB_SELECT_BOX(toCheck));
+                        toReturn.Derivations.Add (WEB_SELECT_BOX (toCheck));
                         break;
                     case "web.dialog":
-                        toReturn.Derivations.Add(WEB_DIALOG(toCheck));
+                        toReturn.Derivations.Add (WEB_DIALOG (toCheck));
                         break;
                     case "web.radioButton":
-                        toReturn.Derivations.Add(WEB_RADIO_BUTTON(toCheck));
+                        toReturn.Derivations.Add (WEB_RADIO_BUTTON (toCheck));
                         break;
                     case "web.checkBox":
-                        toReturn.Derivations.Add(WEB_CHECK_BOX(toCheck));
+                        toReturn.Derivations.Add (WEB_CHECK_BOX (toCheck));
                         break;
                     case "web.textArea":
-                        toReturn.Derivations.Add(WEB_TEXT_AREA(toCheck));
+                        toReturn.Derivations.Add (WEB_TEXT_AREA (toCheck));
                         break;
                     case "browser.launch":
-                        toReturn.Derivations.Add(BROWSER_LAUNCH(toCheck));
+                        toReturn.Derivations.Add (BROWSER_LAUNCH (toCheck));
                         break;
                     default:
-                        throw new FormatException();
+                        throw new FormatException ();
                 }
-            }
-            catch (FormatException e)
-            {
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                throw new FormatException("Input " + input + " and following terms are not of SCRIPT_ELEMENT type; " + e.Message);
+                throw new FormatException ("Input " + input + " and following terms are not of SCRIPT_ELEMENT type; " + e.Message);
             }
 
             return toReturn;
@@ -1480,54 +1334,50 @@ namespace Lesse.OATS.OgmaParser
          * 
          * ELEMENT_DETAILS -> '(' NUMBER ',' ELEMENT_NAME ')' '.' ACTION
          */
-        private ClassNode ELEMENT_DETAILS(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Element_Details);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode ELEMENT_DETAILS (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Element_Details);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
-                if (input.Equals("("))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+            try {
+                if (input.Equals ("("))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                inputQueue.SplitItem(",");
+                inputQueue.SplitItem (",");
 
-                toReturn.Derivations.Add(NUMBER(inputQueue.Pop()));
+                toReturn.Derivations.Add (NUMBER (inputQueue.Pop ()));
 
-                if (inputQueue.Pop().Equals(","))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals (","))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                inputQueue.SplitItem("\"");
+                inputQueue.SplitItem ("\"");
 
-                toReturn.Derivations.Add(ELEMENT_NAME(inputQueue.Pop()));
+                toReturn.Derivations.Add (ELEMENT_NAME (inputQueue.Pop ()));
 
-                inputQueue.SplitItem(".");
+                inputQueue.SplitItem (".");
 
-                if (inputQueue.Pop().Equals(")"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals (")"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                inputQueue.SplitItem(".");
+                inputQueue.SplitItem (".");
 
-                if (inputQueue.Pop().Equals("."))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals ("."))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                inputQueue.SplitItem(")");
-                inputQueue.SplitItem("(");
+                inputQueue.SplitItem (")");
+                inputQueue.SplitItem ("(");
 
-                toReturn.Derivations.Add(ACTION(inputQueue.Pop()));
-            }
-            catch (FormatException e)
-            {
+                toReturn.Derivations.Add (ACTION (inputQueue.Pop ()));
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                throw new FormatException("Input " + input + " and following terms are not of ELEMENT_DETAILS type; " + e.Message);
+                throw new FormatException ("Input " + input + " and following terms are not of ELEMENT_DETAILS type; " + e.Message);
             }
 
             return toReturn;
@@ -1538,33 +1388,29 @@ namespace Lesse.OATS.OgmaParser
          * 
          * WEB_WINDOW -> 'web.window' ELEMENT_DETAILS ';'
          */
-        private ClassNode WEB_WINDOW(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Web_Window);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode WEB_WINDOW (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Web_Window);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
-                if (input.Equals("web.window"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+            try {
+                if (input.Equals ("web.window"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                toReturn.Derivations.Add(ELEMENT_DETAILS(inputQueue.Pop()));
+                toReturn.Derivations.Add (ELEMENT_DETAILS (inputQueue.Pop ()));
 
-                if (inputQueue.Pop().Equals(";"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals (";"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
 #if DEBUG
-                inputQueue.PrintTokenList("TokenizerTestAfterWebWindow.txt");
+                inputQueue.PrintTokenList ("TokenizerTestAfterWebWindow.txt");
 #endif
-            }
-            catch (FormatException e)
-            {
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                throw new FormatException("Input " + input + " and following terms are not of WEB_WINDOW type; " + e.Message);
+                throw new FormatException ("Input " + input + " and following terms are not of WEB_WINDOW type; " + e.Message);
             }
 
             return toReturn;
@@ -1575,33 +1421,29 @@ namespace Lesse.OATS.OgmaParser
          * 
          * WEB_TEXTBOX -> 'web.textBox' ELEMENT_DETAILS ';'
          */
-        private ClassNode WEB_TEXTBOX(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Web_Textbox);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode WEB_TEXTBOX (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Web_Textbox);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
-                if (input.Equals("web.textBox"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+            try {
+                if (input.Equals ("web.textBox"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                toReturn.Derivations.Add(ELEMENT_DETAILS(inputQueue.Pop()));
+                toReturn.Derivations.Add (ELEMENT_DETAILS (inputQueue.Pop ()));
 
-                if (inputQueue.Pop().Equals(";"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals (";"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
 #if DEBUG
-                inputQueue.PrintTokenList("TokenizationTestAfterTextBox.txt");
+                inputQueue.PrintTokenList ("TokenizationTestAfterTextBox.txt");
 #endif
-            }
-            catch (FormatException e)
-            {
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                throw new FormatException("Input " + input + " and following terms are not of WEB_TEXTBOX type; " + e.Message);
+                throw new FormatException ("Input " + input + " and following terms are not of WEB_TEXTBOX type; " + e.Message);
             }
 
             return toReturn;
@@ -1612,99 +1454,87 @@ namespace Lesse.OATS.OgmaParser
          * 
          * WEB_BUTTON -> 'web.button' ELEMENT_DETAILS ';'
          */
-        private ClassNode WEB_BUTTON(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Web_Button);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode WEB_BUTTON (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Web_Button);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
-                if (input.Equals("web.button"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+            try {
+                if (input.Equals ("web.button"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                toReturn.Derivations.Add(ELEMENT_DETAILS(inputQueue.Pop()));
+                toReturn.Derivations.Add (ELEMENT_DETAILS (inputQueue.Pop ()));
 
-                if (inputQueue.Pop().Equals(";"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals (";"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
 #if DEBUG
-                inputQueue.PrintTokenList("TokenizationTestAfterButton.txt");
+                inputQueue.PrintTokenList ("TokenizationTestAfterButton.txt");
 #endif
-            }
-            catch (FormatException e)
-            {
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                throw new FormatException("Input " + input + " and following terms are not of WEB_BUTTON type; " + e.Message);
+                throw new FormatException ("Input " + input + " and following terms are not of WEB_BUTTON type; " + e.Message);
             }
 
             return toReturn;
         }
 
-        private ClassNode WEB_IMAGE(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Web_Image);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode WEB_IMAGE (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Web_Image);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
+            try {
                 //RuleChecks
-                if (input.Equals("web.image"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (input.Equals ("web.image"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                toReturn.Derivations.Add(ELEMENT_DETAILS(inputQueue.Pop()));
+                toReturn.Derivations.Add (ELEMENT_DETAILS (inputQueue.Pop ()));
 
-                if (inputQueue.Pop().Equals(";"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals (";"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
 #if DEBUG
-                inputQueue.PrintTokenList("TokenizationTestAfterImage.txt");
+                inputQueue.PrintTokenList ("TokenizationTestAfterImage.txt");
 #endif
-            }
-            catch (FormatException e)
-            {
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                throw new FormatException("Input " + input + " and following terms are not of WEB_IMAGE type; " + e.Message);
+                throw new FormatException ("Input " + input + " and following terms are not of WEB_IMAGE type; " + e.Message);
             }
 
             return toReturn;
         }
 
-        private ClassNode WEB_ALERT_DIALOG(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Web_Alert_Dialog);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode WEB_ALERT_DIALOG (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Web_Alert_Dialog);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
+            try {
                 //RuleChecks
-                if (input.Equals("web.alertDialog"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (input.Equals ("web.alertDialog"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                toReturn.Derivations.Add(ELEMENT_DETAILS(inputQueue.Pop()));
+                toReturn.Derivations.Add (ELEMENT_DETAILS (inputQueue.Pop ()));
 
-                if (inputQueue.Pop().Equals(";"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals (";"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
 #if DEBUG
-                inputQueue.PrintTokenList("TokenizationTestAfterAlertDialog.txt");
+                inputQueue.PrintTokenList ("TokenizationTestAfterAlertDialog.txt");
 #endif
-            }
-            catch (FormatException e)
-            {
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                throw new FormatException("Input " + input + " and following terms are not of WEB_ALERT_DIALOG type; " + e.Message);
+                throw new FormatException ("Input " + input + " and following terms are not of WEB_ALERT_DIALOG type; " + e.Message);
             }
 
             return toReturn;
@@ -1715,234 +1545,206 @@ namespace Lesse.OATS.OgmaParser
          * 
          * WEB_LINK -> 'web.link' ELEMENT_DETAILS ';'
          */
-        private ClassNode WEB_LINK(string input)
-        {
+        private ClassNode WEB_LINK (string input) {
 #if DEBUG
-            inputQueue.PrintTokenList("TokenizerTestWebWindow.txt");
+            inputQueue.PrintTokenList ("TokenizerTestWebWindow.txt");
 #endif
 
-            ClassNode toReturn = new ClassNode(Classes.Web_Link);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+            ClassNode toReturn = new ClassNode (Classes.Web_Link);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
-                if (input.Equals("web.link"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+            try {
+                if (input.Equals ("web.link"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                toReturn.Derivations.Add(ELEMENT_DETAILS(inputQueue.Pop()));
+                toReturn.Derivations.Add (ELEMENT_DETAILS (inputQueue.Pop ()));
 
-                if (inputQueue.Pop().Equals(";"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals (";"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
-            }
-            catch (FormatException e)
-            {
+                    throw new FormatException ();
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                throw new FormatException("Input " + input + " and following terms are not of WEB_LINK type; " + e.Message);
+                throw new FormatException ("Input " + input + " and following terms are not of WEB_LINK type; " + e.Message);
             }
 
             return toReturn;
         }
 
-        private ClassNode WEB_ELEMENT(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Web_Element);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode WEB_ELEMENT (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Web_Element);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
+            try {
                 //RuleChecks
-                if (input.Equals("web.element"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (input.Equals ("web.element"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                toReturn.Derivations.Add(ELEMENT_DETAILS(inputQueue.Pop()));
+                toReturn.Derivations.Add (ELEMENT_DETAILS (inputQueue.Pop ()));
 
-                if (inputQueue.Pop().Equals(";"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals (";"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
 #if DEBUG
-                inputQueue.PrintTokenList("TokenizationTestAfterElement.txt");
+                inputQueue.PrintTokenList ("TokenizationTestAfterElement.txt");
 #endif
-            }
-            catch (FormatException e)
-            {
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                throw new FormatException("Input " + input + " and following terms are not of WEB_ELEMENT type; " + e.Message);
+                throw new FormatException ("Input " + input + " and following terms are not of WEB_ELEMENT type; " + e.Message);
             }
 
             return toReturn;
         }
 
-        private ClassNode WEB_SELECT_BOX(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Web_Select_Box);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode WEB_SELECT_BOX (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Web_Select_Box);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
+            try {
                 //RuleChecks
-                if (input.Equals("web.selectBox"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (input.Equals ("web.selectBox"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                toReturn.Derivations.Add(ELEMENT_DETAILS(inputQueue.Pop()));
+                toReturn.Derivations.Add (ELEMENT_DETAILS (inputQueue.Pop ()));
 
-                if (inputQueue.Pop().Equals(";"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals (";"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 #if DEBUG
-                inputQueue.PrintTokenList("TokenizationTestAfterSelectBox.txt");
+                inputQueue.PrintTokenList ("TokenizationTestAfterSelectBox.txt");
 #endif
-            }
-            catch (FormatException e)
-            {
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                throw new FormatException("Input " + input + " and following terms are not of WEB_SELECT_BOX type; " + e.Message);
+                throw new FormatException ("Input " + input + " and following terms are not of WEB_SELECT_BOX type; " + e.Message);
             }
 
             return toReturn;
         }
 
         //TODO - Test (Edemar)
-        private ClassNode WEB_DIALOG(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Web_Dialog);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode WEB_DIALOG (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Web_Dialog);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
+            try {
                 //RuleChecks
-                if (input.Equals("web.dialog"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (input.Equals ("web.dialog"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                toReturn.Derivations.Add(ELEMENT_DETAILS(inputQueue.Pop()));
+                toReturn.Derivations.Add (ELEMENT_DETAILS (inputQueue.Pop ()));
 
-                if (inputQueue.Pop().Equals(";"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals (";"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
 #if DEBUG
-                inputQueue.PrintTokenList("TokenizationTestAfterDialog.txt");
+                inputQueue.PrintTokenList ("TokenizationTestAfterDialog.txt");
 #endif
-            }
-            catch (FormatException e)
-            {
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                throw new FormatException("Input " + input + " and following terms are not of WEB_DIALOG type; " + e.Message);
+                throw new FormatException ("Input " + input + " and following terms are not of WEB_DIALOG type; " + e.Message);
             }
 
             return toReturn;
         }
 
         //TODO - Test (Edemar)
-        private ClassNode WEB_RADIO_BUTTON(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Web_Radio_Button);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode WEB_RADIO_BUTTON (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Web_Radio_Button);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
+            try {
                 //RuleChecks
-                if (input.Equals("web.radioButton"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (input.Equals ("web.radioButton"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                toReturn.Derivations.Add(ELEMENT_DETAILS(inputQueue.Pop()));
+                toReturn.Derivations.Add (ELEMENT_DETAILS (inputQueue.Pop ()));
 
-                if (inputQueue.Pop().Equals(";"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals (";"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
 #if DEBUG
-                inputQueue.PrintTokenList("TokenizationTestAfterRadioButton.txt");
+                inputQueue.PrintTokenList ("TokenizationTestAfterRadioButton.txt");
 #endif
-            }
-            catch (FormatException e)
-            {
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                throw new FormatException("Input " + input + " and following terms are not of WEB_RADIO_BUTTON type; " + e.Message);
+                throw new FormatException ("Input " + input + " and following terms are not of WEB_RADIO_BUTTON type; " + e.Message);
             }
 
             return toReturn;
         }
 
         //TODO - Test (Edemar)
-        private ClassNode WEB_CHECK_BOX(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Web_Check_Box);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode WEB_CHECK_BOX (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Web_Check_Box);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
+            try {
                 //RuleChecks
-                if (input.Equals("web.checkBox"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (input.Equals ("web.checkBox"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                toReturn.Derivations.Add(ELEMENT_DETAILS(inputQueue.Pop()));
+                toReturn.Derivations.Add (ELEMENT_DETAILS (inputQueue.Pop ()));
 
-                if (inputQueue.Pop().Equals(";"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals (";"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
 #if DEBUG
-                inputQueue.PrintTokenList("TokenizationTestAfterCheckBox.txt");
+                inputQueue.PrintTokenList ("TokenizationTestAfterCheckBox.txt");
 #endif
-            }
-            catch (FormatException e)
-            {
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                throw new FormatException("Input " + input + " and following terms are not of WEB_CHECK_BOX type; " + e.Message);
+                throw new FormatException ("Input " + input + " and following terms are not of WEB_CHECK_BOX type; " + e.Message);
             }
 
             return toReturn;
         }
 
         //TODO - Test (Edemar)
-        private ClassNode WEB_TEXT_AREA(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Web_Text_Area);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode WEB_TEXT_AREA (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Web_Text_Area);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
+            try {
                 //RuleChecks
-                if (input.Equals("web.textArea"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (input.Equals ("web.textArea"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                toReturn.Derivations.Add(ELEMENT_DETAILS(inputQueue.Pop()));
+                toReturn.Derivations.Add (ELEMENT_DETAILS (inputQueue.Pop ()));
 
-                if (inputQueue.Pop().Equals(";"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals (";"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
 #if DEBUG
-                inputQueue.PrintTokenList("TokenizationTestAfterTextArea.txt");
+                inputQueue.PrintTokenList ("TokenizationTestAfterTextArea.txt");
 #endif
-            }
-            catch (FormatException e)
-            {
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                throw new FormatException("Input " + input + " and following terms are not of WEB_TEXT_AREA type; " + e.Message);
+                throw new FormatException ("Input " + input + " and following terms are not of WEB_TEXT_AREA type; " + e.Message);
             }
 
             return toReturn;
@@ -1955,37 +1757,33 @@ namespace Lesse.OATS.OgmaParser
          * 
          * BROWSER_LAUNCH -> 'browser.launch' '(' ')' ';'
          */
-        private ClassNode BROWSER_LAUNCH(string input)
-        {
-            ClassNode toReturn = new ClassNode(Classes.Browser_Launch);
-            InputQueue backupInput = (InputQueue)inputQueue.Clone();
+        private ClassNode BROWSER_LAUNCH (string input) {
+            ClassNode toReturn = new ClassNode (Classes.Browser_Launch);
+            InputQueue backupInput = (InputQueue) inputQueue.Clone ();
 
-            try
-            {
-                if (input.Equals("browser.launch"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+            try {
+                if (input.Equals ("browser.launch"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                if (inputQueue.Pop().Equals("("))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals ("("))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                if (inputQueue.Pop().Equals(")"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals (")"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
+                    throw new FormatException ();
 
-                if (inputQueue.Pop().Equals(";"))
-                    toReturn.Derivations.Add(new ClassNode(Classes.Reserved_Word));
+                if (inputQueue.Pop ().Equals (";"))
+                    toReturn.Derivations.Add (new ClassNode (Classes.Reserved_Word));
                 else
-                    throw new FormatException();
-            }
-            catch (FormatException e)
-            {
+                    throw new FormatException ();
+            } catch (FormatException e) {
                 inputQueue = backupInput;
-                throw new FormatException("Input " + input + " and following terms are not of BROWSER_LAUNCH type; " + e.Message);
+                throw new FormatException ("Input " + input + " and following terms are not of BROWSER_LAUNCH type; " + e.Message);
             }
 
             return toReturn;

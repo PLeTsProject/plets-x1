@@ -1,11 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace Coc.Testing.Performance.IntermediateStruct
-{
+namespace Coc.Testing.Performance.IntermediateStruct {
     /// <summary>
     /// Models the entity that results from the parsing of an Use Case.
     /// </summary>
@@ -16,28 +15,28 @@ namespace Coc.Testing.Performance.IntermediateStruct
         /// <summary>
         /// Probability of occurrence of an Use Case.
         /// </summary>
-        [XmlAttribute("Probability")]
+        [XmlAttribute ("Probability")]
         public float Probability {
             get { return probability; }
             set { probability = value; }
         }
 
         private string name;
-        [XmlAttribute("Name")]
+        [XmlAttribute ("Name")]
         public string Name {
             get { return name; }
             set { name = value; }
         }
 
         private List<Request> requests;
-        [XmlElement("Requests")]
+        [XmlElement ("Requests")]
         public List<Request> Requests {
             get { return requests; }
             set { requests = value; }
         }
 
         private List<Transaction> transactions;
-        [XmlElement("Transactions")]
+        [XmlElement ("Transactions")]
         public List<Transaction> Transactions {
             get { return transactions; }
             set { transactions = value; }

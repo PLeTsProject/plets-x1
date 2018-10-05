@@ -1,18 +1,15 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Coc.Testing.Performance.AbstractTestCases
-{
-    public class Subtransaction
-    {
+namespace Coc.Testing.Performance.AbstractTestCases {
+    public class Subtransaction {
         private string name;
         /// <summary>
         /// Name.
         /// </summary>
-        public string Name
-        {
+        public string Name {
             get { return name; }
             set { name = value; }
         }
@@ -21,8 +18,7 @@ namespace Coc.Testing.Performance.AbstractTestCases
         /// <summary>
         /// Begin trans.
         /// </summary>
-        public Request Begin
-        {
+        public Request Begin {
             get { return begin; }
             set { begin = value; }
         }
@@ -31,8 +27,7 @@ namespace Coc.Testing.Performance.AbstractTestCases
         /// <summary>
         /// End trans.
         /// </summary>
-        public Request End
-        {
+        public Request End {
             get { return end; }
             set { end = value; }
         }

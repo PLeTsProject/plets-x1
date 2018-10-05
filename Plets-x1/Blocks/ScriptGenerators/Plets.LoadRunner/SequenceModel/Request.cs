@@ -1,17 +1,14 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace Lesse.LoadRunner.SequenceModel
-{
+namespace Lesse.LoadRunner.SequenceModel {
     /// <summary>
     /// Class that represents a generic Request
     /// </summary>
-    public class Request
-    {
-        public Request()
-        {
-            this.Parameters = new List<Parameter>();
-            this.Cookies = new List<Cookie>();
-            this.SaveParameters = new List<SaveParameter>();
+    public class Request {
+        public Request () {
+            this.Parameters = new List<Parameter> ();
+            this.Cookies = new List<Cookie> ();
+            this.SaveParameters = new List<SaveParameter> ();
         }
 
         public double OptimisticTime { get; set; }
@@ -36,16 +33,13 @@ namespace Lesse.LoadRunner.SequenceModel
         /// Returns true if this Request has the same name of given Request. 
         /// Names diagram as unique identifier each for Request objects.
         /// </summary>
-        public override bool Equals(object obj)
-        {
-            Request r = (Request)obj;
-            if (r == null)
-            {
+        public override bool Equals (object obj) {
+            Request r = (Request) obj;
+            if (r == null) {
                 return false;
             }
 
-            if (this.Name.Equals(r.Name))
-            {
+            if (this.Name.Equals (r.Name)) {
                 return true;
             }
             return false;
@@ -53,8 +47,7 @@ namespace Lesse.LoadRunner.SequenceModel
 
         private bool isParallel;
 
-        public bool IsParallel
-        {
+        public bool IsParallel {
             get { return isParallel; }
             set { isParallel = value; }
         }
@@ -62,15 +55,13 @@ namespace Lesse.LoadRunner.SequenceModel
         /// <summary>
         /// Overrides base method for prevent warnings.
         /// </summary>
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
+        public override int GetHashCode () {
+            return base.GetHashCode ();
         }
 
         private string body;
 
-        public string Body
-        {
+        public string Body {
             get { return body; }
             set { body = value; }
         }

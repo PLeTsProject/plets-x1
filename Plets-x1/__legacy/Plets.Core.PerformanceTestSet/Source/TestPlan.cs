@@ -1,26 +1,22 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Plets.Core.ControlAndConversionStructures;
 
-namespace Plets.Modeling.TestPlanStructure
-{
-    public class TestPlan : GeneralUseStructure
-    {
+namespace Plets.Modeling.TestPlanStructure {
+    public class TestPlan : GeneralUseStructure {
         public String Name { set; get; }
         public String NameUseCase { set; get; }
         //public String Id { set; get; }
         public List<TestCase> TestCases { get; set; }
 
-        public TestPlan()
-        {
+        public TestPlan () {
             this.Name = "";
             this.NameUseCase = "";
             //this.Id = Guid.NewGuid().ToString();
-            this.TestCases = new List<TestCase>();
+            this.TestCases = new List<TestCase> ();
         }
 
-        public override string ToString()
-        {
+        public override string ToString () {
             return Name;
         }
     }

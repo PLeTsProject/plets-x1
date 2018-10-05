@@ -1,23 +1,20 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace Coc.Testing.Performance.IntermediateStruct
-{
+namespace Coc.Testing.Performance.IntermediateStruct {
     /// <summary>
     /// Class that represents a generic Metric
     /// </summary>
     [Serializable]
-    internal class Metric
-    {
+    internal class Metric {
 
         /// <summary>
         /// Operational system enum list
         /// </summary>
-        public enum OperationalSystem
-        {
+        public enum OperationalSystem {
             Windows,
             Linux,
             Unix,
@@ -28,8 +25,7 @@ namespace Coc.Testing.Performance.IntermediateStruct
         /// <summary>
         /// OS
         /// </summary>
-        public OperationalSystem OS
-        {
+        public OperationalSystem OS {
             get { return os; }
             set { os = value; }
         }
@@ -38,9 +34,8 @@ namespace Coc.Testing.Performance.IntermediateStruct
         /// <summary>
         /// Counter list.
         /// </summary>
-        [XmlElement("Counters")]
-        public List<Counter> Counters
-        {
+        [XmlElement ("Counters")]
+        public List<Counter> Counters {
             get { return counters; }
             set { counters = value; }
         }
@@ -49,8 +44,7 @@ namespace Coc.Testing.Performance.IntermediateStruct
         /// <summary>
         /// Metric name.
         /// </summary>
-        public string Name
-        {
+        public string Name {
             get { return name; }
             set { name = value; }
         }

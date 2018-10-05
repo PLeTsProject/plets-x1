@@ -1,16 +1,13 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace Plets.Modeling.TestSuitStructure
-{
+namespace Plets.Modeling.TestSuitStructure {
     /// <summary>
     /// Class that represents a generic Scenario
     /// </summary>
-    public class Scenario
-    {
+    public class Scenario {
         #region Constructor
-        public Scenario()
-        {
-            this.testCases = new List<TestCase>();
+        public Scenario () {
+            this.testCases = new List<TestCase> ();
         }
         #endregion
 
@@ -18,8 +15,7 @@ namespace Plets.Modeling.TestSuitStructure
         /// <summary>
         /// Number of users.
         /// </summary>
-        public int Population
-        {
+        public int Population {
             get { return population; }
             set { population = value; }
         }
@@ -28,8 +24,7 @@ namespace Plets.Modeling.TestSuitStructure
         /// <summary>
         /// Scenario execution time.
         /// </summary>
-        public int ExecutionTime
-        {
+        public int ExecutionTime {
             get { return executionTime; }
             set { executionTime = value; }
         }
@@ -38,8 +33,7 @@ namespace Plets.Modeling.TestSuitStructure
         /// <summary>
         /// Global think time used in all transactions whitin the scenario.
         /// </summary>
-        public int ThinkTime
-        {
+        public int ThinkTime {
             get { return thinkTime; }
             set { thinkTime = value; }
         }
@@ -48,8 +42,7 @@ namespace Plets.Modeling.TestSuitStructure
         /// <summary>
         /// Scenario warmup time.
         /// </summary>
-        public int WarmUpTime
-        {
+        public int WarmUpTime {
             get { return warmUpTime; }
             set { warmUpTime = value; }
         }
@@ -58,8 +51,7 @@ namespace Plets.Modeling.TestSuitStructure
         /// <summary>
         /// Test Cases list.
         /// </summary>
-        public List<TestCase> TestCases
-        {
+        public List<TestCase> TestCases {
             get { return testCases; }
             set { testCases = value; }
         }
@@ -68,8 +60,7 @@ namespace Plets.Modeling.TestSuitStructure
         /// <summary>
         /// RampUp time. (as seconds)
         /// </summary>
-        public double RampUpTime
-        {
+        public double RampUpTime {
             get { return rampUpTime; }
             set { rampUpTime = value; }
         }
@@ -78,8 +69,7 @@ namespace Plets.Modeling.TestSuitStructure
         /// <summary>
         /// Ramp up number of users.
         /// </summary>
-        public int RampUpUser
-        {
+        public int RampUpUser {
             get { return rampUpUser; }
             set { rampUpUser = value; }
         }
@@ -88,8 +78,7 @@ namespace Plets.Modeling.TestSuitStructure
         /// <summary>
         /// RampDown time. (as seconds)
         /// </summary>
-        public double RampDownTime
-        {
+        public double RampDownTime {
             get { return rampDownTime; }
             set { rampDownTime = value; }
         }
@@ -98,8 +87,7 @@ namespace Plets.Modeling.TestSuitStructure
         /// <summary>
         /// Ramp down number of users.
         /// </summary>
-        public int RampDownUser
-        {
+        public int RampDownUser {
             get { return rampDownUser; }
             set { rampDownUser = value; }
         }
@@ -108,8 +96,7 @@ namespace Plets.Modeling.TestSuitStructure
         /// <summary>
         /// Adicional Host list.
         /// </summary>
-        public List<Host> AdditionalHosts
-        {
+        public List<Host> AdditionalHosts {
             get { return additionalHosts; }
             set { additionalHosts = value; }
         }
@@ -118,8 +105,7 @@ namespace Plets.Modeling.TestSuitStructure
         /// <summary>
         /// Host sut.
         /// </summary>
-        public Host HostSUT
-        {
+        public Host HostSUT {
             get { return hostSUT; }
             set { hostSUT = value; }
         }
@@ -128,14 +114,12 @@ namespace Plets.Modeling.TestSuitStructure
         /// <summary>
         /// Host sut.
         /// </summary>
-        public string Name
-        {
+        public string Name {
             get { return name; }
             set { name = value; }
         }
 
-        public override string ToString()
-        {
+        public override string ToString () {
             return this.Name;
         }
     }

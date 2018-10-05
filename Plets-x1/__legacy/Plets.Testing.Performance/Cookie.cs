@@ -1,19 +1,16 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace Coc.Testing.Performance
-{
+namespace Coc.Testing.Performance {
     [Serializable]
-    public class Cookie
-    {
+    public class Cookie {
 
         private string name;
-        [XmlAttribute("Name")]
-        public string Name
-        {
+        [XmlAttribute ("Name")]
+        public string Name {
             get { return name; }
             set { name = value; }
         }

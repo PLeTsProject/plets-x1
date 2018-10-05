@@ -1,7 +1,5 @@
-﻿namespace Lesse.OATS.OgmaParser
-{
-    internal enum Classes
-    {
+namespace Lesse.OATS.OgmaParser {
+    internal enum Classes {
         Epsilon,
         Oats,
         List_Import,

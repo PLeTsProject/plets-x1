@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -7,66 +7,55 @@ using Plets.Core.ControlStructure;
 using Plets.Modeling.Graph;
 using Plets.Modeling.Uml;
 
-namespace Plets.Conversion.ConversionUnit
-{
-    public class UmlToGraphOATS : ModelingStructureConverter
-    {
+namespace Plets.Conversion.ConversionUnit {
+    public class UmlToGraphOATS : ModelingStructureConverter {
         #region Attributes
         public String id { get; set; }
         private String tag1;
         private String tag2;
-        private enum hyperLinkType
-        {
+        private enum hyperLinkType {
             Source,
             Target
         }
         #endregion
 
         #region Constructor
-        public UmlToGraphOATS()
-        {
+        public UmlToGraphOATS () {
             tag1 = "TDACTION";
             tag2 = "TDOBJECT";
         }
         #endregion
 
         #region Public Methods
-        public DirectedGraph[] TransformToGraph(UmlModel model)
-        {
-            List<DirectedGraph> graphs = new List<DirectedGraph>();
-            UmlUseCaseDiagram useCaseDiagram = model.Diagrams.OfType<UmlUseCaseDiagram>().FirstOrDefault();
+        public DirectedGraph[] TransformToGraph (UmlModel model) {
+            List<DirectedGraph> graphs = new List<DirectedGraph> ();
+            UmlUseCaseDiagram useCaseDiagram = model.Diagrams.OfType<UmlUseCaseDiagram> ().FirstOrDefault ();
 
-            if (useCaseDiagram == null)
-            {
-                throw new Exception("No use case diagram found. Cannot continue.");
+            if (useCaseDiagram == null) {
+                throw new Exception ("No use case diagram found. Cannot continue.");
             }
-            foreach (UmlUseCase useCase in useCaseDiagram.UmlObjects.OfType<UmlUseCase>())
-            {
-                String aux = useCase.GetTaggedValue("jude.hyperlink");
+            foreach (UmlUseCase useCase in useCaseDiagram.UmlObjects.OfType<UmlUseCase> ()) {
+                String aux = useCase.GetTaggedValue ("jude.hyperlink");
                 UmlActivityDiagram activityDiagram = null;
 
-                if (aux != null)
-                {
-                    activityDiagram = model.Diagrams.OfType<UmlActivityDiagram>()
-                                                    .Where(x => x.Name == aux)
-                                                    .FirstOrDefault();
+                if (aux != null) {
+                    activityDiagram = model.Diagrams.OfType<UmlActivityDiagram> ()
+                        .Where (x => x.Name == aux)
+                        .FirstOrDefault ();
+                } else {
+                    activityDiagram = model.Diagrams.OfType<UmlActivityDiagram> ()
+                        .Where (x => x.Name == useCase.Name)
+                        .FirstOrDefault ();
                 }
-                else
-                {
-                    activityDiagram = model.Diagrams.OfType<UmlActivityDiagram>()
-                                                    .Where(x => x.Name == useCase.Name)
-                                                    .FirstOrDefault();
-                }
-                if (activityDiagram != null && ContainsInclude(useCaseDiagram, useCase) == false)
-                {
-                    DirectedGraph graph = new DirectedGraph();
-                    graph = ActivityDiagramToGraph(activityDiagram, model);
-                    GetUseCaseTaggedValues(useCase, graph);
+                if (activityDiagram != null && ContainsInclude (useCaseDiagram, useCase) == false) {
+                    DirectedGraph graph = new DirectedGraph ();
+                    graph = ActivityDiagramToGraph (activityDiagram, model);
+                    GetUseCaseTaggedValues (useCase, graph);
                     //graph.NameUseCase = useCaseDiagram.Name;
-                    graphs.Add(graph);
+                    graphs.Add (graph);
                 }
             }
-            return graphs.ToArray();
+            return graphs.ToArray ();
         }
 
         /// <summary>
@@ -75,10 +64,9 @@ namespace Plets.Conversion.ConversionUnit
         /// <param name="diagram">Diagram to be converted</param>
         /// <param name="model">Parent model of diagram, used to get sub-diagrams</param>
         /// <returns>a FSM of diagram</returns>
-        public DirectedGraph ActivityDiagramToGraph(UmlActivityDiagram diagram, UmlModel model)
-        {
-            List<UmlTransition> transitions = diagram.UmlObjects.OfType<UmlTransition>().ToList();
-            DirectedGraph graph = new DirectedGraph(diagram.Name);
+        public DirectedGraph ActivityDiagramToGraph (UmlActivityDiagram diagram, UmlModel model) {
+            List<UmlTransition> transitions = diagram.UmlObjects.OfType<UmlTransition> ().ToList ();
+            DirectedGraph graph = new DirectedGraph (diagram.Name);
             Node source = null;
             Node target = null;
             String input = "";
@@ -86,137 +74,110 @@ namespace Plets.Conversion.ConversionUnit
             Boolean haveHyperlinks = true;
             List<UmlTransition> newTransitions;
 
-            while (haveHyperlinks)
-            {
-                newTransitions = new List<UmlTransition>();
-                foreach (UmlTransition t in transitions)
-                {
-                    String taux = HttpUtility.UrlDecode(t.ToString());
-                    String tactionaux = HttpUtility.UrlDecode(t.GetTaggedValue("TDACTION"));
-                    String tobjectaux = HttpUtility.UrlDecode(t.GetTaggedValue("TDOBJECT"));
+            while (haveHyperlinks) {
+                newTransitions = new List<UmlTransition> ();
+                foreach (UmlTransition t in transitions) {
+                    String taux = HttpUtility.UrlDecode (t.ToString ());
+                    String tactionaux = HttpUtility.UrlDecode (t.GetTaggedValue ("TDACTION"));
+                    String tobjectaux = HttpUtility.UrlDecode (t.GetTaggedValue ("TDOBJECT"));
                     UmlTransition aux = t;
 
-                    if (t.Source.TaggedValues.ContainsKey("jude.hyperlink"))
-                    {
-                        newTransitions.AddRange(GetTransitionsOfDiagram(model, ref aux, hyperLinkType.Source));
+                    if (t.Source.TaggedValues.ContainsKey ("jude.hyperlink")) {
+                        newTransitions.AddRange (GetTransitionsOfDiagram (model, ref aux, hyperLinkType.Source));
                     }
-                    if (t.Target.TaggedValues.ContainsKey("jude.hyperlink"))
-                    {
-                        newTransitions.AddRange(GetTransitionsOfDiagram(model, ref aux, hyperLinkType.Target));
+                    if (t.Target.TaggedValues.ContainsKey ("jude.hyperlink")) {
+                        newTransitions.AddRange (GetTransitionsOfDiagram (model, ref aux, hyperLinkType.Target));
                     }
                 }
 
-                transitions.AddRange(newTransitions);
-                transitions = transitions.Distinct().ToList();
+                transitions.AddRange (newTransitions);
+                transitions = transitions.Distinct ().ToList ();
 
-                haveHyperlinks = transitions.Where(x => x.Source.TaggedValues.ContainsKey("jude.hyperlink") || x.Target.TaggedValues.ContainsKey("jude.hyperlink")).Count() > 0;
+                haveHyperlinks = transitions.Where (x => x.Source.TaggedValues.ContainsKey ("jude.hyperlink") || x.Target.TaggedValues.ContainsKey ("jude.hyperlink")).Count () > 0;
             }
 
             //RemoveForks(ref diagram, ref transitions);
-            RemoveDecisions(ref diagram, ref transitions);
+            RemoveDecisions (ref diagram, ref transitions);
             Dictionary<String, String> tags;
 
-            foreach (UmlTransition t in transitions)
-            {
-                
+            foreach (UmlTransition t in transitions) {
 
-                tags = new Dictionary<string, string>();
-                input = t.GetTaggedValue(tag1);
-                source = new Node(t.Source.Name);
+                tags = new Dictionary<string, string> ();
+                input = t.GetTaggedValue (tag1);
+                source = new Node (t.Source.Name);
                 source.Id = t.Source.Id;
-                if (input != null)
-                {
-                    target = new Node(t.Target.Name);
+                if (input != null) {
+                    target = new Node (t.Target.Name);
                     target.Id = t.Target.Id;
                     output = "";
-                    if (t.GetTaggedValue(tag2) != null)
-                    {
-                        output = t.GetTaggedValue(tag2);
+                    if (t.GetTaggedValue (tag2) != null) {
+                        output = t.GetTaggedValue (tag2);
                     }
                     bool cycleTran = false;
-                    if (t.GetTaggedValue("TDCYCLETRAN") != null)
-                    {
-                        cycleTran = (t.GetTaggedValue("TDCYCLETRAN").Equals("true") ? true : false);
-                        if (t.GetTaggedValue("TDCYCLETRAN").Equals("true"))
-                        {
-                            tags.Add("TDCYCLETRAN", "true");
-                        }
-                        else
-                        {
-                            tags.Add("TDCYCLETRAN", "false");
+                    if (t.GetTaggedValue ("TDCYCLETRAN") != null) {
+                        cycleTran = (t.GetTaggedValue ("TDCYCLETRAN").Equals ("true") ? true : false);
+                        if (t.GetTaggedValue ("TDCYCLETRAN").Equals ("true")) {
+                            tags.Add ("TDCYCLETRAN", "true");
+                        } else {
+                            tags.Add ("TDCYCLETRAN", "false");
                         }
                     }
 
                     bool lastCycleTrans = false;
-                    if (t.GetTaggedValue("TDLASTCYCLETRANS") != null)
-                    {
-                        lastCycleTrans = (t.GetTaggedValue("TDLASTCYCLETRANS").Equals("true") ? true : false);
-                        if (t.GetTaggedValue("TDLASTCYCLETRANS").Equals("true"))
-                        {
-                            tags.Add("TDLASTCYCLETRANS", "true");
-                        }
-                        else
-                        {
-                            tags.Add("TDLASTCYCLETRANS", "false");
+                    if (t.GetTaggedValue ("TDLASTCYCLETRANS") != null) {
+                        lastCycleTrans = (t.GetTaggedValue ("TDLASTCYCLETRANS").Equals ("true") ? true : false);
+                        if (t.GetTaggedValue ("TDLASTCYCLETRANS").Equals ("true")) {
+                            tags.Add ("TDLASTCYCLETRANS", "true");
+                        } else {
+                            tags.Add ("TDLASTCYCLETRANS", "false");
                         }
                     }
-                    tags.Add(tag1, input);
-                    tags.Add(tag2, output);
+                    tags.Add (tag1, input);
+                    tags.Add (tag2, output);
 
-                    Edge e = new Edge(source, target, tags);
-                    graph.addEdge(e);
+                    Edge e = new Edge (source, target, tags);
+                    graph.addEdge (e);
                 }
-                if (t.Target is UmlFinalState)
-                {
-                    graph.checkFinal(source);
+                if (t.Target is UmlFinalState) {
+                    graph.checkFinal (source);
                 }
             }
 
-            diagram.UmlObjects.RemoveAll(IsTransition);
-            diagram.UmlObjects.AddRange(transitions);
+            diagram.UmlObjects.RemoveAll (IsTransition);
+            diagram.UmlObjects.AddRange (transitions);
 
-            graph = WipeOutOutermost(diagram, graph);
-            graph.RootNode = GetRootNode(graph);
+            graph = WipeOutOutermost (diagram, graph);
+            graph.RootNode = GetRootNode (graph);
             graph.Name = diagram.Name;
             return graph;
         }
 
-        public List<GeneralUseStructure> Converter(List<GeneralUseStructure> listModel, StructureType type)
-        {
-            UmlModel model = listModel.OfType<UmlModel>().FirstOrDefault();
-            List<DirectedGraph> listGraph = TransformToGraph((UmlModel)model).ToList();
-            return listGraph.Cast<GeneralUseStructure>().ToList();
+        public List<GeneralUseStructure> Converter (List<GeneralUseStructure> listModel, StructureType type) {
+            UmlModel model = listModel.OfType<UmlModel> ().FirstOrDefault ();
+            List<DirectedGraph> listGraph = TransformToGraph ((UmlModel) model).ToList ();
+            return listGraph.Cast<GeneralUseStructure> ().ToList ();
         }
         #endregion
 
         #region Private Methods
-        private void GetUseCaseTaggedValues(UmlUseCase useCase, DirectedGraph graph)
-        {
-            foreach (KeyValuePair<String, String> pair in useCase.TaggedValues)
-            {
-                if (!pair.Key.Equals("jude.hyperlink"))
-                {
-                    graph.Values.Add(pair.Key, pair.Value);
+        private void GetUseCaseTaggedValues (UmlUseCase useCase, DirectedGraph graph) {
+            foreach (KeyValuePair<String, String> pair in useCase.TaggedValues) {
+                if (!pair.Key.Equals ("jude.hyperlink")) {
+                    graph.Values.Add (pair.Key, pair.Value);
                 }
             }
         }
 
-        private Node GetRootNode(DirectedGraph graph)
-        {
-            Node root = new Node();
-            root = (from e in graph.Edges
-                    where graph.Edges.Count(x => x.NodeB.Equals(e.NodeA)) == 0
-                    select e.NodeA).First();
+        private Node GetRootNode (DirectedGraph graph) {
+            Node root = new Node ();
+            root = (from e in graph.Edges where graph.Edges.Count (x => x.NodeB.Equals (e.NodeA)) == 0 select e.NodeA).First ();
             return root;
         }
 
-        private bool ContainsInclude(UmlUseCaseDiagram diagram, UmlUseCase useCase)
-        {
+        private bool ContainsInclude (UmlUseCaseDiagram diagram, UmlUseCase useCase) {
             bool IsInclude = true;
-            foreach (UmlAssociation item in diagram.UmlObjects.OfType<UmlAssociation>())
-            {
-                if (item.End1.Id.Equals(useCase.Id) && item.End2 is UmlActor || item.End2.Id.Equals(useCase.Id) && item.End1 is UmlActor)
-                {
+            foreach (UmlAssociation item in diagram.UmlObjects.OfType<UmlAssociation> ()) {
+                if (item.End1.Id.Equals (useCase.Id) && item.End2 is UmlActor || item.End2.Id.Equals (useCase.Id) && item.End1 is UmlActor) {
                     IsInclude = false;
                 }
             }
@@ -231,16 +192,14 @@ namespace Plets.Conversion.ConversionUnit
         /// <param name="t">the transation with hyperlink</param>
         /// <param name="tp">the side where the hyperlink is (source or target)</param>
         /// <returns>a list of the transitions</returns>
-        private List<UmlTransition> GetTransitionsOfDiagram(UmlModel model, ref UmlTransition t, hyperLinkType tp)
-        {
+        private List<UmlTransition> GetTransitionsOfDiagram (UmlModel model, ref UmlTransition t, hyperLinkType tp) {
             List<UmlTransition> subTransitions;
             UmlElement s;
             String hyperlink = "";
             int c = 0;
             Boolean paramcycle = false;
 
-            if (tp == hyperLinkType.Source)
-            {
+            if (tp == hyperLinkType.Source) {
                 /*
                 if (t.Source.TaggedValues.ContainsKey("cycles"))
                 {
@@ -248,9 +207,7 @@ namespace Plets.Conversion.ConversionUnit
                     paramcycle = true;
                 }*/
                 hyperlink = t.Source.TaggedValues["jude.hyperlink"];
-            }
-            else
-            {
+            } else {
                 /*
                 if (t.Target.TaggedValues.ContainsKey("cycles"))
                 {
@@ -261,112 +218,81 @@ namespace Plets.Conversion.ConversionUnit
             }
 
             //recupera o subdiagrama que foi atribuido a variavel hyperlink 
-            UmlActivityDiagram subDiagram = model.Diagrams.OfType<UmlActivityDiagram>()
-                                                          .Where(y => y.Name.Equals(hyperlink))
-                                                          .FirstOrDefault();
-            
-            if (subDiagram == null)
-            {
-                throw new Exception("Could not find any Activity Diagram named " + hyperlink);
+            UmlActivityDiagram subDiagram = model.Diagrams.OfType<UmlActivityDiagram> ()
+                .Where (y => y.Name.Equals (hyperlink))
+                .FirstOrDefault ();
+
+            if (subDiagram == null) {
+                throw new Exception ("Could not find any Activity Diagram named " + hyperlink);
             }
 
-
             //recupera a primeira transicao para buscar o valor de marcacao que deve ser atribuido
-            subTransitions = subDiagram.UmlObjects.OfType<UmlTransition>().ToList();
-            foreach (UmlTransition tran in subTransitions)
-            {
-                if (tran.End1.Name.Equals("InitialNode0"))
-                {
-                    paramcycle = tran.TaggedValues.ContainsKey("TDITERATIONS");
-                    try
-                    {
-                        c = Convert.ToInt32(tran.GetTaggedValue("TDITERATIONS"));
-                    }
-                    catch (FormatException)
-                    {
+            subTransitions = subDiagram.UmlObjects.OfType<UmlTransition> ().ToList ();
+            foreach (UmlTransition tran in subTransitions) {
+                if (tran.End1.Name.Equals ("InitialNode0")) {
+                    paramcycle = tran.TaggedValues.ContainsKey ("TDITERATIONS");
+                    try {
+                        c = Convert.ToInt32 (tran.GetTaggedValue ("TDITERATIONS"));
+                    } catch (FormatException) {
                         c = 0;
                     }
                 }
             }
-            
-            
-            if (paramcycle)
-            {
-                foreach (UmlTransition subTransition in subTransitions)
-                {
-                    if (!subTransition.TaggedValues.ContainsKey("paramcycle"))
-                    {
-                        subTransition.TaggedValues.Add("paramcycle", c.ToString());
+
+            if (paramcycle) {
+                foreach (UmlTransition subTransition in subTransitions) {
+                    if (!subTransition.TaggedValues.ContainsKey ("paramcycle")) {
+                        subTransition.TaggedValues.Add ("paramcycle", c.ToString ());
                         //subTransition.TaggedValues.Add("paramcycle", "exists");
                     }
                 }
             }
             List<UmlTransition> fs = null;
             UmlTransition f = null;
-            if (tp == hyperLinkType.Source)
-            {
-                fs = subTransitions.Where(x => x.Target is UmlFinalState).ToList();
-                f = fs.ElementAt(0);
-            }
-            else
-            {
-                f = subTransitions.Single(x => x.Source is UmlInitialState);
+            if (tp == hyperLinkType.Source) {
+                fs = subTransitions.Where (x => x.Target is UmlFinalState).ToList ();
+                f = fs.ElementAt (0);
+            } else {
+                f = subTransitions.Single (x => x.Source is UmlInitialState);
             }
 
-            if (f != null)
-            {
-                if (tp == hyperLinkType.Source)
-                {
+            if (f != null) {
+                if (tp == hyperLinkType.Source) {
                     s = f.Source;
-                    for (int i = 1; i < fs.Count; i++)
-                    {
-                        UmlTransition temp = fs.ElementAt(i);
+                    for (int i = 1; i < fs.Count; i++) {
+                        UmlTransition temp = fs.ElementAt (i);
                         temp.Target = t.Target;
-                        foreach (KeyValuePair<string, string> tag in t.TaggedValues)
-                        {
-                            if (!temp.TaggedValues.ContainsKey(tag.Key))
-                            {
-                                temp.TaggedValues.Add(tag.Key, tag.Value);
+                        foreach (KeyValuePair<string, string> tag in t.TaggedValues) {
+                            if (!temp.TaggedValues.ContainsKey (tag.Key)) {
+                                temp.TaggedValues.Add (tag.Key, tag.Value);
                             }
                         }
                     }
-                }
-                else
-                {
+                } else {
                     s = f.Target;
                 }
-                foreach (KeyValuePair<string, string> tag in f.TaggedValues)
-                {
-                    if (!t.TaggedValues.ContainsKey(tag.Key))
-                    {
-                        t.TaggedValues.Add(tag.Key, tag.Value);
+                foreach (KeyValuePair<string, string> tag in f.TaggedValues) {
+                    if (!t.TaggedValues.ContainsKey (tag.Key)) {
+                        t.TaggedValues.Add (tag.Key, tag.Value);
                     }
                 }
                 //subTransitions.Remove(f);
-            }
-            else
-            {
-                if (tp == hyperLinkType.Source)
-                {
-                    s = subDiagram.UmlObjects.OfType<UmlFinalState>().FirstOrDefault();
-                }
-                else
-                {
-                    s = subDiagram.UmlObjects.OfType<UmlInitialState>().FirstOrDefault();
+            } else {
+                if (tp == hyperLinkType.Source) {
+                    s = subDiagram.UmlObjects.OfType<UmlFinalState> ().FirstOrDefault ();
+                } else {
+                    s = subDiagram.UmlObjects.OfType<UmlInitialState> ().FirstOrDefault ();
                 }
             }
 
-            UmlTransition initialT = subTransitions.SingleOrDefault(x => x.Source is UmlInitialState);
+            UmlTransition initialT = subTransitions.SingleOrDefault (x => x.Source is UmlInitialState);
 
-            subTransitions.RemoveAll(x => x.Target is UmlFinalState);
-            subTransitions.RemoveAll(x => x.Source is UmlInitialState);
+            subTransitions.RemoveAll (x => x.Target is UmlFinalState);
+            subTransitions.RemoveAll (x => x.Source is UmlInitialState);
 
-            if (tp == hyperLinkType.Source)
-            {
+            if (tp == hyperLinkType.Source) {
                 t.Source = s;
-            }
-            else
-            {
+            } else {
                 t.Target = s;
             }
 
@@ -461,42 +387,33 @@ namespace Plets.Conversion.ConversionUnit
         /// </summary>
         /// <param name="diagram">targeted diagram to remove decision/merge nodes from</param>
         /// <param name="transitions">transitions to be searched and replaced</param>
-        private void RemoveDecisions(ref UmlActivityDiagram diagram, ref List<UmlTransition> transitions)
-        {
-            List<UmlDecision> decs = (from t in transitions
-                                      where t.Target is UmlDecision
-                                      select (UmlDecision)t.Target).Distinct().ToList();
-            while (decs.Count > 0)
-            {
-                foreach (UmlDecision decision in decs)
-                {
-                    List<UmlTransition> decisionProspects = transitions.Where(x => x.Source.Equals(decision)).ToList();
-                    List<UmlTransition> newTransitions = new List<UmlTransition>();
-                    List<UmlTransition> Ss = transitions.Where(x => x.Target.Equals(decision)).ToList();
-                    foreach (UmlTransition sT in Ss)
-                    {
+        private void RemoveDecisions (ref UmlActivityDiagram diagram, ref List<UmlTransition> transitions) {
+            List<UmlDecision> decs = (from t in transitions where t.Target is UmlDecision select (UmlDecision) t.Target).Distinct ().ToList ();
+            while (decs.Count > 0) {
+                foreach (UmlDecision decision in decs) {
+                    List<UmlTransition> decisionProspects = transitions.Where (x => x.Source.Equals (decision)).ToList ();
+                    List<UmlTransition> newTransitions = new List<UmlTransition> ();
+                    List<UmlTransition> Ss = transitions.Where (x => x.Target.Equals (decision)).ToList ();
+                    foreach (UmlTransition sT in Ss) {
                         UmlElement s = sT.Source;
                         UmlElement t = null;
                         UmlTransition tran;
-                        for (int i = 0; i < decisionProspects.Count; i++)
-                        {
+                        for (int i = 0; i < decisionProspects.Count; i++) {
                             t = decisionProspects[i].Target;
-                            tran = new UmlTransition();
+                            tran = new UmlTransition ();
                             tran.Source = s;
                             tran.Target = t;
                             foreach (KeyValuePair<string, string> tag in decisionProspects[i].TaggedValues)
-                                tran.TaggedValues.Add(tag.Key, tag.Value);
-                            newTransitions.Add(tran);
+                                tran.TaggedValues.Add (tag.Key, tag.Value);
+                            newTransitions.Add (tran);
                         }
                     }
-                    transitions.RemoveAll(x => x.Target.Equals(decision) || x.Source.Equals(decision));
-                    diagram.UmlObjects.Remove(decision);
-                    transitions.AddRange(newTransitions);
+                    transitions.RemoveAll (x => x.Target.Equals (decision) || x.Source.Equals (decision));
+                    diagram.UmlObjects.Remove (decision);
+                    transitions.AddRange (newTransitions);
                 }
 
-                decs = (from t in transitions
-                        where t.Target is UmlDecision
-                        select (UmlDecision)t.Target).Distinct().ToList();
+                decs = (from t in transitions where t.Target is UmlDecision select (UmlDecision) t.Target).Distinct ().ToList ();
             }
         }
 
@@ -506,31 +423,27 @@ namespace Plets.Conversion.ConversionUnit
         /// <param name="diagram">Uml diagram of the given FSM</param>
         /// <param name="graph">graph to clean</param>
         /// <returns>cleaned FSM</returns>
-        private DirectedGraph WipeOutOutermost(UmlActivityDiagram diagram, DirectedGraph graph)
-        {
-            UmlFinalState digFinal = diagram.UmlObjects.OfType<UmlFinalState>().FirstOrDefault();
+        private DirectedGraph WipeOutOutermost (UmlActivityDiagram diagram, DirectedGraph graph) {
+            UmlFinalState digFinal = diagram.UmlObjects.OfType<UmlFinalState> ().FirstOrDefault ();
             if (digFinal == null)
-                throw new Exception("Activity Diagram " + diagram.Name + " must have a final state.");
+                throw new Exception ("Activity Diagram " + diagram.Name + " must have a final state.");
 
+            Node nF = new Node (digFinal.Name, digFinal.Id);
+            graph.WipeOutNode (nF);
 
-            Node nF = new Node(digFinal.Name, digFinal.Id);
-            graph.WipeOutNode(nF);
-
-            UmlInitialState digInitial = diagram.UmlObjects.OfType<UmlInitialState>().FirstOrDefault();
+            UmlInitialState digInitial = diagram.UmlObjects.OfType<UmlInitialState> ().FirstOrDefault ();
             if (digInitial == null)
-                throw new Exception("Activity Diagram " + diagram.Name + " must have a initial state.");
-            if (diagram.UmlObjects.OfType<UmlTransition>().Where(x => x.Target.Equals(digInitial)
-                                                                   || x.Source.Equals(digInitial)
-                                                                   && x.TaggedValues.Count > 0
-                                                                ).Count() == 0)
-            {
-                graph.WipeOutNode(new Node(digInitial.Name));
+                throw new Exception ("Activity Diagram " + diagram.Name + " must have a initial state.");
+            if (diagram.UmlObjects.OfType<UmlTransition> ().Where (x => x.Target.Equals (digInitial) ||
+                    x.Source.Equals (digInitial) &&
+                    x.TaggedValues.Count > 0
+                ).Count () == 0) {
+                graph.WipeOutNode (new Node (digInitial.Name));
             }
             return graph;
         }
 
-        private Boolean IsTransition(UmlBase element)
-        {
+        private Boolean IsTransition (UmlBase element) {
             return element is UmlTransition;
         }
         #endregion

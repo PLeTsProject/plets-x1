@@ -1,4 +1,4 @@
-﻿//using System;
+//using System;
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
@@ -57,7 +57,6 @@
 //            ScenarioLR.GenerateScenario(scenario, scenario.Name, destinationPath);
 
 //            Directory.CreateDirectory(destinationPath + "\\WSDL");
-
 
 //        }
 

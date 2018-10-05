@@ -1,10 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Coc.Testing.Performance.AbstractTestCases
-{
+namespace Coc.Testing.Performance.AbstractTestCases {
     /// <summary>
     /// Class that represents a generic Counter
     /// </summary>
@@ -19,7 +18,6 @@ namespace Coc.Testing.Performance.AbstractTestCases
             set { name = value; }
         }
 
-
         private Object thresholds;
         /// <summary>
         /// Thresholds. Expected SLA value.
@@ -28,6 +26,6 @@ namespace Coc.Testing.Performance.AbstractTestCases
             get { return thresholds; }
             set { thresholds = value; }
         }
-        
+
     }
 }

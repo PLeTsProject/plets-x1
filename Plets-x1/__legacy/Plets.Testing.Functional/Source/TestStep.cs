@@ -1,12 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Plets.Testing.Functional
-{
-    public class TestStep
-    {
+namespace Plets.Testing.Functional {
+    public class TestStep {
         public String Description { get; set; }
         public String ExpectedResult { get; set; }
         //public List<TestStep> CompositeSteps { get; set; }
@@ -26,8 +24,7 @@ namespace Plets.Testing.Functional
         public String TDtcTeamUsage;
         //public String Id { get; set; }
 
-        public TestStep()
-        {
+        public TestStep () {
             this.Description = "";
             this.ExpectedResult = "";
             this.Index = "";

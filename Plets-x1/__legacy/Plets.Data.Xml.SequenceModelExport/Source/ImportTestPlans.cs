@@ -1,33 +1,26 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Xml;
 using Plets.Modeling.TestPlanStructure;
 
-
-namespace Plets.Data.Xml.SequenceModelExport
-{
-    public class ImportTestPlans
-    {
-        public List<TestPlan> FromXmi(XmlDocument doc)
-        {
-            List<TestPlan> listTestPlan = new List<TestPlan>();
-            XmlNodeList nodesWithActivityDiagrams = doc.SelectNodes("//TestPlan");
-            foreach (XmlNode node in doc.SelectNodes("//TestPlan"))
-            {
-                TestPlan testPlan = new TestPlan();
+namespace Plets.Data.Xml.SequenceModelExport {
+    public class ImportTestPlans {
+        public List<TestPlan> FromXmi (XmlDocument doc) {
+            List<TestPlan> listTestPlan = new List<TestPlan> ();
+            XmlNodeList nodesWithActivityDiagrams = doc.SelectNodes ("//TestPlan");
+            foreach (XmlNode node in doc.SelectNodes ("//TestPlan")) {
+                TestPlan testPlan = new TestPlan ();
                 testPlan.Name = node.Attributes["Name"].Value;
-                String id=node.Attributes["id"].Value;
-                foreach (XmlNode testCaseXml in node.SelectNodes("//TestPlan[@id='" + id + "']//TestCase"))
-                {
+                String id = node.Attributes["id"].Value;
+                foreach (XmlNode testCaseXml in node.SelectNodes ("//TestPlan[@id='" + id + "']//TestCase")) {
 
-                    TestCase testCase = new TestCase(testCaseXml.Attributes["Title"].Value);
+                    TestCase testCase = new TestCase (testCaseXml.Attributes["Title"].Value);
                     testCase.Summary = testCaseXml.Attributes["Summary"].Value;
                     //testCase.TestCaseId = int.Parse(testCaseXml.Attributes["TestCaseId"].Value);
-                    testCase.WorkItemId = int.Parse(testCaseXml.Attributes["WorkItemId"].Value);
-                  
-                    foreach (XmlNode testStepXml in testCaseXml.SelectNodes("//TestPlan//TestCase[@TestCaseId='" + testCase.WorkItemId + "']//TestStep"))
-                    {
-                        TestStep testStep = new TestStep();
+                    testCase.WorkItemId = int.Parse (testCaseXml.Attributes["WorkItemId"].Value);
+
+                    foreach (XmlNode testStepXml in testCaseXml.SelectNodes ("//TestPlan//TestCase[@TestCaseId='" + testCase.WorkItemId + "']//TestStep")) {
+                        TestStep testStep = new TestStep ();
                         testStep.Description = testStepXml.Attributes["Description"].Value;
                         testStep.ExpectedResult = testStepXml.Attributes["ExpectedResult"].Value;
                         testStep.Index = testStepXml.Attributes["Index"].Value;
@@ -44,11 +37,11 @@ namespace Plets.Data.Xml.SequenceModelExport
                         //testStep.TDtcTeamUsage = testStepXml.Attributes["TDTCTEAMUSAGE"].Value;
                         testStep.workItemIdString = testStepXml.Attributes["workItemIdString"].Value;
                         testStep.Title = testStepXml.Attributes["Title"].Value;
-                        testCase.TestSteps.Add(testStep);
+                        testCase.TestSteps.Add (testStep);
                     }
-                    testPlan.TestCases.Add(testCase);
+                    testPlan.TestCases.Add (testCase);
                 }
-                listTestPlan.Add(testPlan);
+                listTestPlan.Add (testPlan);
             }
             return listTestPlan;
         }

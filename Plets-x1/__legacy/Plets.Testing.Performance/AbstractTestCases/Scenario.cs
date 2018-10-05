@@ -1,20 +1,17 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Coc.Testing.Performance.AbstractTestCases
-{
+namespace Coc.Testing.Performance.AbstractTestCases {
     /// <summary>
     /// Class that represents a generic Scenario
     /// </summary>
     public class Scenario {
 
-        public Scenario()
-        {
-            this.testCases = new List<TestCase>();
+        public Scenario () {
+            this.testCases = new List<TestCase> ();
         }
-
 
         private int population;
         /// <summary>
@@ -38,8 +35,7 @@ namespace Coc.Testing.Performance.AbstractTestCases
         /// <summary>
         /// Global think time used in all transactions whitin the scenario.
         /// </summary>
-        public int ThinkTime
-        {
+        public int ThinkTime {
             get { return thinkTime; }
             set { thinkTime = value; }
         }
@@ -48,8 +44,7 @@ namespace Coc.Testing.Performance.AbstractTestCases
         /// <summary>
         /// Scenario warmup time.
         /// </summary>
-        public int WarmUpTime
-        {
+        public int WarmUpTime {
             get { return warmUpTime; }
             set { warmUpTime = value; }
         }
@@ -62,17 +57,15 @@ namespace Coc.Testing.Performance.AbstractTestCases
             get { return testCases; }
             set { testCases = value; }
         }
-        
 
         private double rampUpTime;
         /// <summary>
         /// RampUp time. (as seconds)
         /// </summary>
-        public double RampUpTime{
+        public double RampUpTime {
             get { return rampUpTime; }
             set { rampUpTime = value; }
         }
-
 
         private int rampUpUser;
         /// <summary>
@@ -83,7 +76,6 @@ namespace Coc.Testing.Performance.AbstractTestCases
             set { rampUpUser = value; }
         }
 
-
         private double rampDownTime;
         /// <summary>
         /// RampDown time. (as seconds)
@@ -92,7 +84,6 @@ namespace Coc.Testing.Performance.AbstractTestCases
             get { return rampDownTime; }
             set { rampDownTime = value; }
         }
-
 
         private int rampDownUser;
         /// <summary>
@@ -103,7 +94,6 @@ namespace Coc.Testing.Performance.AbstractTestCases
             set { rampDownUser = value; }
         }
 
-
         private List<Host> additionalHosts;
         /// <summary>
         /// Adicional Host list.
@@ -113,7 +103,6 @@ namespace Coc.Testing.Performance.AbstractTestCases
             set { additionalHosts = value; }
         }
 
-
         private Host hostSUT;
         /// <summary>
         /// Host sut.
@@ -122,7 +111,6 @@ namespace Coc.Testing.Performance.AbstractTestCases
             get { return hostSUT; }
             set { hostSUT = value; }
         }
-
 
         private string name;
         /// <summary>

@@ -1,11 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Plets.Core.FiniteStateMachine
-{
-    public class StateNode
-    {
+namespace Plets.Core.FiniteStateMachine {
+    public class StateNode {
         private State state;
         private String[] preamble;
         private List<StateNode> children;
@@ -14,40 +12,29 @@ namespace Plets.Core.FiniteStateMachine
         public String[] Preamble { get { return preamble; } }
         public List<StateNode> Children { get { return children; } }
 
-        private StateNode()
-        {
+        private StateNode () {
             this.state = null;
             this.preamble = null;
             this.children = null;
         }
 
-        public StateNode(State aState, String[] aPreamble)
-            : this()
-        {
+        public StateNode (State aState, String[] aPreamble) : this () {
             this.state = aState;
             this.preamble = aPreamble;
-            this.children = new List<StateNode>();
+            this.children = new List<StateNode> ();
         }
-        public StateNode(State aState, String[] aPreamble, List<StateNode> theChildren)
-            : this(aState, aPreamble)
-        {
-            this.AddChildren(theChildren);
+        public StateNode (State aState, String[] aPreamble, List<StateNode> theChildren) : this (aState, aPreamble) {
+            this.AddChildren (theChildren);
         }
 
-        public StateNode getState(State s)
-        {
+        public StateNode getState (State s) {
             StateNode x = null;
-            if (state.Name.Equals(s.Name))
-            {
+            if (state.Name.Equals (s.Name)) {
                 return this;
-            }
-            else if (children.Count > 0)
-            {
-                foreach (StateNode sn in children)
-                {
-                    x = sn.getState(s);
-                    if (x != null)
-                    {
+            } else if (children.Count > 0) {
+                foreach (StateNode sn in children) {
+                    x = sn.getState (s);
+                    if (x != null) {
                         return x;
                     }
                 }
@@ -55,29 +42,24 @@ namespace Plets.Core.FiniteStateMachine
             return null;
         }
 
-        public void AddChildren(List<StateNode> newChildren)
-        {
-            this.children.AddRange(newChildren);
+        public void AddChildren (List<StateNode> newChildren) {
+            this.children.AddRange (newChildren);
         }
 
-        public override string ToString()
-        {
-            return write(this, "");
+        public override string ToString () {
+            return write (this, "");
         }
 
-        private string write(StateNode s, string p)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(p + s.state.Name + " {" + arrayToString(s.preamble) + "}");
-            foreach (StateNode c in s.children)
-            {
-                sb.Append(Environment.NewLine + write(c, p + "\t"));
+        private string write (StateNode s, string p) {
+            StringBuilder sb = new StringBuilder ();
+            sb.Append (p + s.state.Name + " {" + arrayToString (s.preamble) + "}");
+            foreach (StateNode c in s.children) {
+                sb.Append (Environment.NewLine + write (c, p + "\t"));
             }
-            return sb.ToString();
+            return sb.ToString ();
         }
 
-        private string arrayToString(string[] p)
-        {
+        private string arrayToString (string[] p) {
             string ret = "";
             if (p.Length > 0)
                 ret = p[0];
@@ -87,13 +69,12 @@ namespace Plets.Core.FiniteStateMachine
         }
 
         // override object.Equals
-        public override bool Equals(object obj)
-        {
+        public override bool Equals (object obj) {
             if (!(obj is StateNode))
                 return false;
 
-            StateNode o = (StateNode)obj;
-            if (!o.State.Equals(this.State))
+            StateNode o = (StateNode) obj;
+            if (!o.State.Equals (this.State))
                 return false;
             if (o.Preamble.Length != this.Preamble.Length)
                 return false;

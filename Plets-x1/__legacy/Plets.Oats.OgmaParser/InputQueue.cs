@@ -1,71 +1,59 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Lesse.OATS.OgmaParser
-{
-    internal class InputQueue : ICloneable
-    {
+namespace Lesse.OATS.OgmaParser {
+    internal class InputQueue : ICloneable {
         private List<string> queue;
         private int pointer;
 
-        public int Pointer
-        {
+        public int Pointer {
             get { return pointer; }
             set { pointer = value; }
         }
 
-        public InputQueue(string input)
-        {
-            input = input.Replace(System.Environment.NewLine, " ");
-            input = input.Replace("\t", " ");
-            queue = input.Split(' ').ToList();
-            queue.RemoveAll(item => item.Equals(""));
+        public InputQueue (string input) {
+            input = input.Replace (System.Environment.NewLine, " ");
+            input = input.Replace ("\t", " ");
+            queue = input.Split (' ').ToList ();
+            queue.RemoveAll (item => item.Equals (""));
             pointer = 0;
-            #if DEBUG
-            PrintTokenList("TokenizationListFirstMoment.txt");
-            #endif
+#if DEBUG
+            PrintTokenList ("TokenizationListFirstMoment.txt");
+#endif
         }
 
-        private InputQueue(InputQueue oldQueue)
-        {
+        private InputQueue (InputQueue oldQueue) {
             this.pointer = oldQueue.Pointer;
-            this.queue = new List<string>();
+            this.queue = new List<string> ();
 
-            foreach (String value in oldQueue.queue)
-            {
-                this.queue.Add(value);
+            foreach (String value in oldQueue.queue) {
+                this.queue.Add (value);
             }
         }
 
-        internal void SplitItem(string border)
-        {
+        internal void SplitItem (string border) {
             string itemToSplit = queue[pointer];
-            itemToSplit = itemToSplit.Replace(border, border + "$" + border);
+            itemToSplit = itemToSplit.Replace (border, border + "$" + border);
 
-            List<string> newItems = itemToSplit.Split(border.ToCharArray()).ToList();
-            newItems.RemoveAll(item => item.Equals(""));
+            List<string> newItems = itemToSplit.Split (border.ToCharArray ()).ToList ();
+            newItems.RemoveAll (item => item.Equals (""));
 
-            for (int i = 0; i < newItems.Count; i++)
-            {
-                if (newItems[i].Equals("$"))
+            for (int i = 0; i < newItems.Count; i++) {
+                if (newItems[i].Equals ("$"))
                     newItems[i] = border;
             }
 
-            queue.InsertRange(pointer + 1, newItems);
-            queue.RemoveAt(pointer);
+            queue.InsertRange (pointer + 1, newItems);
+            queue.RemoveAt (pointer);
         }
 
-        public string Pop()
-        {
-            try
-            {
+        public string Pop () {
+            try {
                 string toReturn = queue[pointer];
                 pointer++;
                 return toReturn;
-            }
-            catch (Exception)
-            {
+            } catch (Exception) {
                 pointer++;
                 return "";
             }
@@ -74,44 +62,35 @@ namespace Lesse.OATS.OgmaParser
         /// <summary>
         /// This method is internal to the functioning of the Lexical Analyser. Use with caution.
         /// </summary>
-        internal void DecrementPointer()
-        {
+        internal void DecrementPointer () {
             pointer--;
         }
 
-        public object Clone()
-        {
-            return new InputQueue(this);
+        public object Clone () {
+            return new InputQueue (this);
         }
 
-        #if DEBUG
+#if DEBUG
         /// <summary>
         /// Method used for testing the class.
         /// </summary>
-        internal void PrintTokenList(string path)
-        {
-            System.Threading.Thread.Sleep(500);
+        internal void PrintTokenList (string path) {
+            System.Threading.Thread.Sleep (500);
 
-            using (StreamWriter writer = new StreamWriter(path))
-            {
-                foreach (string item in queue)
-                {
-                    writer.WriteLine(item);
+            using (StreamWriter writer = new StreamWriter (path)) {
+                foreach (string item in queue) {
+                    writer.WriteLine (item);
                 }
             }
         }
 
-        internal string Peek()
-        {
-            try
-            {
+        internal string Peek () {
+            try {
                 return queue[pointer];
-            }
-            catch (Exception)
-            {
+            } catch (Exception) {
                 return "";
             }
         }
-        #endif
+#endif
     }
 }

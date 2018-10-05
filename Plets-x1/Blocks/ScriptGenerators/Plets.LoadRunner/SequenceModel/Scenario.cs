@@ -1,23 +1,19 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace Lesse.LoadRunner.SequenceModel
-{
+namespace Lesse.LoadRunner.SequenceModel {
     /// <summary>
     /// Class that represents a generic Scenario
     /// </summary>
-    public class Scenario
-    {
-        public Scenario()
-        {
-            this.testCases = new List<TestCase>();
+    public class Scenario {
+        public Scenario () {
+            this.testCases = new List<TestCase> ();
         }
 
         private int population;
         /// <summary>
         /// Number of users.
         /// </summary>
-        public int Population
-        {
+        public int Population {
             get { return population; }
             set { population = value; }
         }
@@ -26,8 +22,7 @@ namespace Lesse.LoadRunner.SequenceModel
         /// <summary>
         /// Scenario execution time.
         /// </summary>
-        public int ExecutionTime
-        {
+        public int ExecutionTime {
             get { return executionTime; }
             set { executionTime = value; }
         }
@@ -36,8 +31,7 @@ namespace Lesse.LoadRunner.SequenceModel
         /// <summary>
         /// Global think time used in all transactions whitin the scenario.
         /// </summary>
-        public int ThinkTime
-        {
+        public int ThinkTime {
             get { return thinkTime; }
             set { thinkTime = value; }
         }
@@ -46,8 +40,7 @@ namespace Lesse.LoadRunner.SequenceModel
         /// <summary>
         /// Scenario warmup time.
         /// </summary>
-        public int WarmUpTime
-        {
+        public int WarmUpTime {
             get { return warmUpTime; }
             set { warmUpTime = value; }
         }
@@ -56,8 +49,7 @@ namespace Lesse.LoadRunner.SequenceModel
         /// <summary>
         /// Test Cases list.
         /// </summary>
-        public List<TestCase> TestCases
-        {
+        public List<TestCase> TestCases {
             get { return testCases; }
             set { testCases = value; }
         }
@@ -66,8 +58,7 @@ namespace Lesse.LoadRunner.SequenceModel
         /// <summary>
         /// RampUp time. (as seconds)
         /// </summary>
-        public double RampUpTime
-        {
+        public double RampUpTime {
             get { return rampUpTime; }
             set { rampUpTime = value; }
         }
@@ -76,8 +67,7 @@ namespace Lesse.LoadRunner.SequenceModel
         /// <summary>
         /// Ramp up number of users.
         /// </summary>
-        public int RampUpUser
-        {
+        public int RampUpUser {
             get { return rampUpUser; }
             set { rampUpUser = value; }
         }
@@ -86,8 +76,7 @@ namespace Lesse.LoadRunner.SequenceModel
         /// <summary>
         /// RampDown time. (as seconds)
         /// </summary>
-        public double RampDownTime
-        {
+        public double RampDownTime {
             get { return rampDownTime; }
             set { rampDownTime = value; }
         }
@@ -96,8 +85,7 @@ namespace Lesse.LoadRunner.SequenceModel
         /// <summary>
         /// Ramp down number of users.
         /// </summary>
-        public int RampDownUser
-        {
+        public int RampDownUser {
             get { return rampDownUser; }
             set { rampDownUser = value; }
         }
@@ -106,8 +94,7 @@ namespace Lesse.LoadRunner.SequenceModel
         /// <summary>
         /// Adicional Host list.
         /// </summary>
-        public List<Host> AdditionalHosts
-        {
+        public List<Host> AdditionalHosts {
             get { return additionalHosts; }
             set { additionalHosts = value; }
         }
@@ -116,8 +103,7 @@ namespace Lesse.LoadRunner.SequenceModel
         /// <summary>
         /// Host sut.
         /// </summary>
-        public Host HostSUT
-        {
+        public Host HostSUT {
             get { return hostSUT; }
             set { hostSUT = value; }
         }
@@ -126,8 +112,7 @@ namespace Lesse.LoadRunner.SequenceModel
         /// <summary>
         /// Host sut.
         /// </summary>
-        public string Name
-        {
+        public string Name {
             get { return name; }
             set { name = value; }
         }

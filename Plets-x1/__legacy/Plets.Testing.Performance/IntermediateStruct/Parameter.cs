@@ -1,26 +1,19 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
-
-namespace Coc.Testing.Performance.IntermediateStruct
-{
+namespace Coc.Testing.Performance.IntermediateStruct {
     /// <summary>
     /// Models a parameter of a certain entity, which will generally be sent along with the request to the SUT.
     /// </summary>
     [Serializable]
-    public class Parameter
-    {
+    public class Parameter {
 
-        public Parameter()
-            :this("","")
-        {
-        }
+        public Parameter () : this ("", "") { }
 
-        public Parameter(string name, string paramValue)
-        {
+        public Parameter (string name, string paramValue) {
             this.name = name;
             this.paramValue = paramValue;
         }
@@ -29,9 +22,8 @@ namespace Coc.Testing.Performance.IntermediateStruct
         /// <summary>
         /// Name.
         /// </summary>
-        [XmlAttribute("Name")]
-        public string Name
-        {
+        [XmlAttribute ("Name")]
+        public string Name {
             get { return name; }
             set { name = value; }
         }
@@ -40,9 +32,8 @@ namespace Coc.Testing.Performance.IntermediateStruct
         /// <summary>
         /// Value.
         /// </summary>
-        [XmlAttribute("Value")]
-        public string Value
-        {
+        [XmlAttribute ("Value")]
+        public string Value {
             get { return paramValue; }
             set { paramValue = value; }
         }

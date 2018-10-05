@@ -1,13 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
-namespace Plets.Modeling.TestPlanStructure
-{
-    public class TestCase
-    {
+namespace Plets.Modeling.TestPlanStructure {
+    public class TestCase {
         public static int contWorkItemId = 1000;
         public int WorkItemId { get; set; }
-     
+
         public String Title { get; set; }
         public String Summary { get; set; }
         public List<TestStep> TestSteps { get; set; }
@@ -26,15 +24,13 @@ namespace Plets.Modeling.TestPlanStructure
         public String TDtcTeamUsage;
         public Boolean WriteFirstLine;
 
-        public TestCase(String title)
-        {
+        public TestCase (String title) {
             this.Title = title;
             Summary = "";
-            this.TestSteps = new List<TestStep>();
+            this.TestSteps = new List<TestStep> ();
         }
 
-        public override string ToString()
-        {
+        public override string ToString () {
             return Title;
         }
     }

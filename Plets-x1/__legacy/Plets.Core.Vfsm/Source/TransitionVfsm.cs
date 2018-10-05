@@ -1,11 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Plets.Modeling.FiniteStateMachine;
 
-namespace Plets.Modeling.Vfsm
-{
-    public class TransitionVfsm
-    {
+namespace Plets.Modeling.Vfsm {
+    public class TransitionVfsm {
         #region Attributes
         public List<Variable> ListGuardian { get; set; }
         public List<Variable> ListNewGuardian { get; set; }
@@ -17,33 +15,29 @@ namespace Plets.Modeling.Vfsm
         #endregion
 
         #region Constructor
-        public TransitionVfsm()
-        {
-            ListGuardian = new List<Variable>();
-            ListNewGuardian = new List<Variable>();
+        public TransitionVfsm () {
+            ListGuardian = new List<Variable> ();
+            ListNewGuardian = new List<Variable> ();
         }
         #endregion
 
         #region Public Methods
-        public override string ToString()
-        {
+        public override string ToString () {
             String guardian = "[";
             String newGuardian = "[";
 
-            foreach (var item in ListGuardian)
-            {
+            foreach (var item in ListGuardian) {
                 guardian += item + ",";
             }
 
             guardian += "]";
 
-            foreach (var item in ListNewGuardian)
-            {
+            foreach (var item in ListNewGuardian) {
                 newGuardian += item + ",";
             }
 
             newGuardian += "]";
-            
+
             return (Source.Name + "---" + " Guardian: " + guardian + " Input:" + Input + "--" + "Output:" + Output + " NewValueGuardian: " + newGuardian + "--" + Target.Name);
         }
         #endregion

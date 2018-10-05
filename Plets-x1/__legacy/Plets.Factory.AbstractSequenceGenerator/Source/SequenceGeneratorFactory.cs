@@ -1,4 +1,4 @@
-﻿//#define HSI
+//#define HSI
 //#define DFS
 //#define Wp
 //#define OATS
@@ -22,31 +22,27 @@ using Plets.Modeling.FiniteStateMachine.WP;
 #if PL_OATS
 #endif
 
-namespace Plets.Factory.AbstractSequenceGenerator
-{
-    public class SequenceGeneratorFactory
-    {
-        public static SequenceGenerator CreateSequenceGenerator(StructureType type)
-        {
-            switch (type)
-            {
+namespace Plets.Factory.AbstractSequenceGenerator {
+    public class SequenceGeneratorFactory {
+        public static SequenceGenerator CreateSequenceGenerator (StructureType type) {
+            switch (type) {
 #if PL_HSI
                 case StructureType.HSI:
-                    return new HsiMethod();
+                    return new HsiMethod ();
 #endif
 #if PL_DFS
                 case StructureType.DFS_TCC:
-                    return new DepthFirstSearchForTCC();
+                    return new DepthFirstSearchForTCC ();
                 case StructureType.DFS:
-                    return new DepthFirstSearch();
+                    return new DepthFirstSearch ();
 #endif
 #if PL_WP
                 case StructureType.Wp:
-                    return new Wp();
+                    return new Wp ();
 #endif
 #if PL_OATS
                 case StructureType.OATS:
-                    return new SequenceGenerator();
+                    return new SequenceGenerator ();
 #endif
 
             }

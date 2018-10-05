@@ -1,10 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Coc.Testing.Performance.AbstractTestCases
-{
+namespace Coc.Testing.Performance.AbstractTestCases {
     /// <summary>
     /// Class that represents a generic Host
     /// </summary>
@@ -22,7 +21,6 @@ namespace Coc.Testing.Performance.AbstractTestCases
             LoadBalance
         }
 
-
         private HostType type;
         /// <summary>
         /// Host type.
@@ -31,8 +29,6 @@ namespace Coc.Testing.Performance.AbstractTestCases
             get { return type; }
             set { type = value; }
         }
-
-
 
         private String name;
         /// <summary>
@@ -43,7 +39,6 @@ namespace Coc.Testing.Performance.AbstractTestCases
             set { name = value; }
         }
 
-
         private Boolean monitoring;
         /// <summary>
         /// Monitoring.
@@ -52,7 +47,6 @@ namespace Coc.Testing.Performance.AbstractTestCases
             get { return monitoring; }
             set { monitoring = value; }
         }
-
 
         private List<Counter> counters;
         /// <summary>

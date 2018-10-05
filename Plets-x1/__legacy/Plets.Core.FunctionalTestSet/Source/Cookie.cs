@@ -1,23 +1,18 @@
-﻿namespace Plets.Modeling.TestSuitStructure
-{
-    public class Cookie
-    {
+namespace Plets.Modeling.TestSuitStructure {
+    public class Cookie {
         #region Constructor
-        public Cookie(string name)
-        {
+        public Cookie (string name) {
             this.name = name;
         }
 
-        public Cookie()
-        {
+        public Cookie () {
 
         }
         #endregion
 
         private string name;
 
-        public string Name
-        {
+        public string Name {
             get { return name; }
             set { name = value; }
         }

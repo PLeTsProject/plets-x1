@@ -1,31 +1,27 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Coc.Testing.Performance.AbstractTestCases
-{
+namespace Coc.Testing.Performance.AbstractTestCases {
     /// <summary>
     /// Class that represents a generic TestCase
     /// </summary>
     public class TestCase {
 
-        public TestCase()
-        {
-            this.requests = new List<Request>();
-            this.Transactions = new List<Transaction>();
+        public TestCase () {
+            this.requests = new List<Request> ();
+            this.Transactions = new List<Transaction> ();
         }
 
         private float probability;
         /// <summary>
         /// Test Case Propability.
         /// </summary>
-        public float Probability
-        {
+        public float Probability {
             get { return probability; }
             set { probability = value; }
         }
-
 
         private string name;
         /// <summary>
@@ -36,7 +32,6 @@ namespace Coc.Testing.Performance.AbstractTestCases
             set { name = value; }
         }
 
-
         private List<Request> requests;
         /// <summary>
         /// Request list.
@@ -45,7 +40,6 @@ namespace Coc.Testing.Performance.AbstractTestCases
             get { return requests; }
             set { requests = value; }
         }
-
 
         private List<Transaction> transactions;
         /// <summary>
@@ -58,13 +52,10 @@ namespace Coc.Testing.Performance.AbstractTestCases
 
         private string parameterFile;
 
-        public string ParameterFile
-        {
+        public string ParameterFile {
             get { return parameterFile; }
             set { parameterFile = value; }
         }
-        
-        
-        
+
     }
 }

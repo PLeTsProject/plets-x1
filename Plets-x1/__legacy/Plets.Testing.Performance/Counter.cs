@@ -1,16 +1,15 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace Coc.Testing.Performance
-{
+namespace Coc.Testing.Performance {
     [Serializable]
     public class Counter {
 
         private string name;
-        [XmlAttribute("Name")]
+        [XmlAttribute ("Name")]
         public string Name {
             get { return name; }
             set { name = value; }
@@ -20,7 +19,7 @@ namespace Coc.Testing.Performance
         /// <summary>
         /// Thresholds. Expected SLA value.
         /// </summary>
-        [XmlAttribute("Thresholds")]
+        [XmlAttribute ("Thresholds")]
         public string Thresholds {
             get { return thresholds; }
             set { thresholds = value; }

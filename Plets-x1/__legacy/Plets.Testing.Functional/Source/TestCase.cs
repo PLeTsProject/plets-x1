@@ -1,12 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Plets.Testing.Functional
-{
-    public class TestCase
-    {
+namespace Plets.Testing.Functional {
+    public class TestCase {
         public static int contTestCaseId = 001;
         public static int contWorkItemId = 1000;
         public int TestCaseId { get; set; }
@@ -29,15 +27,13 @@ namespace Plets.Testing.Functional
         public String TDtcTeamUsage;
         public Boolean WriteFirstLine;
 
-        public TestCase(String title)
-        {
+        public TestCase (String title) {
             this.Title = title;
             Summary = "";
-            this.TestSteps = new List<TestStep>();
+            this.TestSteps = new List<TestStep> ();
         }
 
-        public override string ToString()
-        {
+        public override string ToString () {
             return Title;
         }
     }

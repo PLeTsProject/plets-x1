@@ -1,18 +1,15 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
-namespace Plets.Modeling.TestSuitStructure
-{
+namespace Plets.Modeling.TestSuitStructure {
     /// <summary>
     /// Class that represents a generic Host
     /// </summary>
-    public class Host
-    {
+    public class Host {
         /// <summary>
         /// HostType
         /// </summary>
-        public enum HostType
-        {
+        public enum HostType {
             Application,
             Database,
             LoadGenerator,
@@ -25,8 +22,7 @@ namespace Plets.Modeling.TestSuitStructure
         /// <summary>
         /// Host type.
         /// </summary>
-        public HostType Type
-        {
+        public HostType Type {
             get { return type; }
             set { type = value; }
         }
@@ -35,8 +31,7 @@ namespace Plets.Modeling.TestSuitStructure
         /// <summary>
         /// Host name (or IP adress).
         /// </summary>
-        public String Name
-        {
+        public String Name {
             get { return name; }
             set { name = value; }
         }
@@ -45,8 +40,7 @@ namespace Plets.Modeling.TestSuitStructure
         /// <summary>
         /// Monitoring.
         /// </summary>
-        public Boolean Monitoring
-        {
+        public Boolean Monitoring {
             get { return monitoring; }
             set { monitoring = value; }
         }
@@ -55,8 +49,7 @@ namespace Plets.Modeling.TestSuitStructure
         /// <summary>
         /// Counter list.
         /// </summary>
-        public List<Counter> Counters
-        {
+        public List<Counter> Counters {
             get { return counters; }
             set { counters = value; }
         }

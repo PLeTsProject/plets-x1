@@ -1,43 +1,37 @@
-﻿using System;
+using System;
 using System.Xml.Serialization;
 
-namespace Plets.Modeling.Graph
-{
+namespace Plets.Modeling.Graph {
     /// <summary>
     /// Represents a node.
     /// </summary>
     [Serializable]
-    public class Node
-    {
+    public class Node {
 
         #region Constructors
         /// <summary>
         /// Parameterless constructor. Used by XmlSerializer.
         /// </summary>
-        public Node()
-        {
+        public Node () {
             this.mark = false;
             this.Name = "nameless_node";
         }
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public Node(String name)
-        {
+        public Node (String name) {
             this.mark = false;
             this.Name = name;
         }
         /// <summary>
         /// Full constructor.
         /// </summary>
-        public Node(String name, bool mark)
-        {
+        public Node (String name, bool mark) {
             this.mark = mark;
             this.Name = name;
         }
 
-        public Node(String name, String id)
-        {
+        public Node (String name, String id) {
             this.Name = name;
             this.Id = id;
         }
@@ -46,9 +40,8 @@ namespace Plets.Modeling.Graph
         /// <summary>
         /// Identifies the node on a graph.
         /// </summary>
-        [XmlAttribute()]
-        public String Id
-        {
+        [XmlAttribute ()]
+        public String Id {
             get;
             set;
         }
@@ -56,9 +49,8 @@ namespace Plets.Modeling.Graph
         /// <summary>
         /// Name property.
         /// </summary>
-        [XmlAttribute()]
-        public String Name
-        {
+        [XmlAttribute ()]
+        public String Name {
             get;
             set;
         }
@@ -66,10 +58,8 @@ namespace Plets.Modeling.Graph
         public bool mark;
 
         #region Methods
-        public override bool Equals(object obj)
-        {
-            if (obj == null || GetType() != obj.GetType())
-            {
+        public override bool Equals (object obj) {
+            if (obj == null || GetType () != obj.GetType ()) {
                 return false;
             }
 
@@ -78,35 +68,29 @@ namespace Plets.Modeling.Graph
             //    return true;
             //}
 
-            if (((Node)obj).Name.Equals(this.Name))
-            {
+            if (((Node) obj).Name.Equals (this.Name)) {
                 return true;
             }
             return false;
         }
 
-        public override int GetHashCode()
-        {
-            return this.Name.GetHashCode();
+        public override int GetHashCode () {
+            return this.Name.GetHashCode ();
         }
 
-        public override string ToString()
-        {
+        public override string ToString () {
             return Name;
         }
 
-        public bool isChecked()
-        {
+        public bool isChecked () {
             return mark;
         }
 
-        public void check()
-        {
+        public void check () {
             mark = true;
         }
 
-        public void uncheck()
-        {
+        public void uncheck () {
             mark = false;
         }
 

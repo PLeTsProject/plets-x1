@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,10 +11,9 @@ namespace Coc.Testing.Performance.AbstractTestCases
     /// </summary>
     public class Parameter {
 
-        public Parameter() {
-        }
+        public Parameter () { }
 
-        public Parameter(string name, string paramValue) {
+        public Parameter (string name, string paramValue) {
             this.name = name;
             this.paramValue = paramValue;
         }
@@ -36,7 +35,6 @@ namespace Coc.Testing.Performance.AbstractTestCases
             get { return paramValue; }
             set { paramValue = value; }
         }
-        
-        
+
     }
 }

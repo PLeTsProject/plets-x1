@@ -1,16 +1,14 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace Coc.Testing.Performance
-{
+namespace Coc.Testing.Performance {
     [Serializable]
     internal class Metric {
 
-        public enum OperationalSystem
-        {
+        public enum OperationalSystem {
             Windows,
             Linux,
             Unix,
@@ -18,14 +16,13 @@ namespace Coc.Testing.Performance
         }
 
         private OperationalSystem os;
-        public OperationalSystem OS
-        {
+        public OperationalSystem OS {
             get { return os; }
             set { os = value; }
         }
 
         private List<Counter> counters;
-        [XmlElement("Counters")]
+        [XmlElement ("Counters")]
         public List<Counter> Counters {
             get { return counters; }
             set { counters = value; }

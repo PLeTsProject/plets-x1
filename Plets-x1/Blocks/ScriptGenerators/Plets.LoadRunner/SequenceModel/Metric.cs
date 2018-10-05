@@ -1,18 +1,15 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace Lesse.LoadRunner.SequenceModel
-{
+namespace Lesse.LoadRunner.SequenceModel {
     /// <summary>
     /// Class that represents a generic Metric
     /// </summary>
-    public class Metric
-    {
+    public class Metric {
         private List<Counter> counters;
         /// <summary>
         /// Counter list.
         /// </summary>
-        public List<Counter> Counters
-        {
+        public List<Counter> Counters {
             get { return counters; }
             set { counters = value; }
         }
@@ -20,8 +17,7 @@ namespace Lesse.LoadRunner.SequenceModel
         /// <summary>
         /// Operational system enum list
         /// </summary>
-        public enum OperationalSystem
-        {
+        public enum OperationalSystem {
             Windows,
             Linux,
             Unix,
@@ -32,8 +28,7 @@ namespace Lesse.LoadRunner.SequenceModel
         /// <summary>
         /// OS.
         /// </summary>
-        public OperationalSystem OS
-        {
+        public OperationalSystem OS {
             get { return os; }
             set { os = value; }
         }
@@ -42,8 +37,7 @@ namespace Lesse.LoadRunner.SequenceModel
         /// <summary>
         /// Metric name.
         /// </summary>
-        public string Name
-        {
+        public string Name {
             get { return name; }
             set { name = value; }
         }

@@ -1,16 +1,13 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace Plets.Modeling.TestSuitStructure
-{
+namespace Plets.Modeling.TestSuitStructure {
     /// <summary>
     /// Class that represents a generic Transaction
     /// </summary>
-    public class Transaction
-    {
+    public class Transaction {
         #region Constructor
-        public Transaction()
-        {
-            this.Subtransactions = new List<Subtransaction>();
+        public Transaction () {
+            this.Subtransactions = new List<Subtransaction> ();
         }
         #endregion
 
@@ -18,8 +15,7 @@ namespace Plets.Modeling.TestSuitStructure
         /// <summary>
         /// Name.
         /// </summary>
-        public string Name
-        {
+        public string Name {
             get { return name; }
             set { name = value; }
         }
@@ -28,8 +24,7 @@ namespace Plets.Modeling.TestSuitStructure
         /// <summary>
         /// Begin trans.
         /// </summary>
-        public Request Begin
-        {
+        public Request Begin {
             get { return begin; }
             set { begin = value; }
         }
@@ -38,8 +33,7 @@ namespace Plets.Modeling.TestSuitStructure
         /// <summary>
         /// End trans.
         /// </summary>
-        public Request End
-        {
+        public Request End {
             get { return end; }
             set { end = value; }
         }
@@ -48,14 +42,12 @@ namespace Plets.Modeling.TestSuitStructure
         /// <summary>
         /// Subtransactions.
         /// </summary>
-        public List<Subtransaction> Subtransactions
-        {
+        public List<Subtransaction> Subtransactions {
             get { return subtransactions; }
             set { subtransactions = value; }
         }
 
-        public override string ToString()
-        {
+        public override string ToString () {
             return this.Name;
         }
     }

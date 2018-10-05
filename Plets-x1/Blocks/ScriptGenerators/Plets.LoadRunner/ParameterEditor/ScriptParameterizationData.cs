@@ -1,9 +1,7 @@
-﻿using System;
+using System;
 
-namespace Lesse.LoadRunner.ParameterEditor
-{
-    public class ScriptParameterizationData
-    {
+namespace Lesse.LoadRunner.ParameterEditor {
+    public class ScriptParameterizationData {
 
         public String Name = "";
         public String Delimiter = ",";

@@ -1,16 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Plets.Core.ControlAndConversionStructures;
 
-namespace Plets.Modeling.TestSuitStructure
-{
-    public class TestSuit : GeneralUseStructure
-    {
+namespace Plets.Modeling.TestSuitStructure {
+    public class TestSuit : GeneralUseStructure {
         #region Constructor
-        public TestSuit(String name)
-        {
+        public TestSuit (String name) {
             this.Name = name;
-            this.Scenarios = new List<Scenario>();
+            this.Scenarios = new List<Scenario> ();
         }
         #endregion
 
@@ -18,8 +15,7 @@ namespace Plets.Modeling.TestSuitStructure
 
         public List<Scenario> Scenarios { set; get; }
 
-        public override string ToString()
-        {
+        public override string ToString () {
             return this.Name;
         }
     }

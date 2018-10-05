@@ -1,11 +1,8 @@
-﻿using System;
+using System;
 
-namespace Plets.Modeling.TestPlanStructure
-{
-    public class TestStepForTCC
-    {
-        public TestStepForTCC()
-        {
+namespace Plets.Modeling.TestPlanStructure {
+    public class TestStepForTCC {
+        public TestStepForTCC () {
             //this.Params = new List<String>();
         }
         public String ActionType { get; set; }

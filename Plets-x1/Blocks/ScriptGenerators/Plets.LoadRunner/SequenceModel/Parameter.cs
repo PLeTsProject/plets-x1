@@ -1,17 +1,13 @@
-﻿namespace Lesse.LoadRunner.SequenceModel
-{
+namespace Lesse.LoadRunner.SequenceModel {
     /// <summary>
     /// Class that represents a generic Parameter
     /// </summary>
-    public class Parameter
-    {
-        public Parameter()
-        {
-        
+    public class Parameter {
+        public Parameter () {
+
         }
 
-        public Parameter(string name, string paramValue)
-        {
+        public Parameter (string name, string paramValue) {
             this.name = name;
             this.paramValue = paramValue;
         }
@@ -20,8 +16,7 @@
         /// <summary>
         /// Name.
         /// </summary>
-        public string Name
-        {
+        public string Name {
             get { return name; }
             set { name = value; }
         }
@@ -30,8 +25,7 @@
         /// <summary>
         /// Value.
         /// </summary>
-        public string Value
-        {
+        public string Value {
             get { return paramValue; }
             set { paramValue = value; }
         }

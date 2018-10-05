@@ -1,12 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
-
-namespace Coc.Testing.Performance
-{
+namespace Coc.Testing.Performance {
     /// <summary>
     /// Models a parameter of a certain entity, which will generally be sent along with the request to the SUT.
     /// </summary>
@@ -14,14 +12,14 @@ namespace Coc.Testing.Performance
     public class Parameter {
 
         private string name;
-        [XmlAttribute("Name")]
+        [XmlAttribute ("Name")]
         public string Name {
             get { return name; }
             set { name = value; }
         }
 
         private string paramValue;
-        [XmlAttribute("Value")]
+        [XmlAttribute ("Value")]
         public string Value {
             get { return paramValue; }
             set { paramValue = value; }

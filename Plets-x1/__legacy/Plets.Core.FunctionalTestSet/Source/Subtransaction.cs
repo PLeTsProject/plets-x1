@@ -1,13 +1,10 @@
-﻿namespace Plets.Modeling.TestSuitStructure
-{
-    public class Subtransaction
-    {
+namespace Plets.Modeling.TestSuitStructure {
+    public class Subtransaction {
         private string name;
         /// <summary>
         /// Name.
         /// </summary>
-        public string Name
-        {
+        public string Name {
             get { return name; }
             set { name = value; }
         }
@@ -16,8 +13,7 @@
         /// <summary>
         /// Begin trans.
         /// </summary>
-        public Request Begin
-        {
+        public Request Begin {
             get { return begin; }
             set { begin = value; }
         }
@@ -26,14 +22,12 @@
         /// <summary>
         /// End trans.
         /// </summary>
-        public Request End
-        {
+        public Request End {
             get { return end; }
             set { end = value; }
         }
 
-        public override string ToString()
-        {
+        public override string ToString () {
             return this.Name;
         }
     }

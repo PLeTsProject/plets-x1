@@ -1,47 +1,42 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Coc.Data.Xmi.Script
-{
-    public class TabHelper
-    {
+namespace Coc.Data.Xmi.Script {
+    public class TabHelper {
 
         private int tabCount;
         private string tabText;
 
-        public TabHelper(int tabNum)
-        {
+        public TabHelper (int tabNum) {
             this.tabCount = tabNum;
             this.tabText = "";
         }
 
-        public void incrementTabs(){
+        public void incrementTabs () {
             tabCount++;
-            updateTabText();
+            updateTabText ();
         }
 
-        public void decrementTabs(){
+        public void decrementTabs () {
             tabCount--;
-            updateTabText();
+            updateTabText ();
         }
 
-        private void updateTabText(){
-            tabText = new String('\t', tabCount);
+        private void updateTabText () {
+            tabText = new String ('\t', tabCount);
         }
 
-        public int TabCount
-        {
+        public int TabCount {
             get { return tabCount; }
-            set { 
+            set {
                 tabCount = value;
-                updateTabText();
+                updateTabText ();
             }
         }
 
-        public string TabText
-        {
+        public string TabText {
             get { return tabText; }
         }
 

@@ -1,22 +1,19 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace Coc.Testing.Performance.IntermediateStruct
-{
+namespace Coc.Testing.Performance.IntermediateStruct {
     /// <summary>
     /// Class that represents a generic Host
     /// </summary>
     [Serializable]
-    public class Host
-    {
+    public class Host {
         /// <summary>
         /// HostType
         /// </summary>
-        public enum HostType
-        {
+        public enum HostType {
             Application,
             Database,
             LoadGenerator,
@@ -29,9 +26,8 @@ namespace Coc.Testing.Performance.IntermediateStruct
         /// <summary>
         /// Host type.
         /// </summary>
-        [XmlElement("Type")]
-        public HostType Type
-        {
+        [XmlElement ("Type")]
+        public HostType Type {
             get { return type; }
             set { type = value; }
         }
@@ -40,9 +36,8 @@ namespace Coc.Testing.Performance.IntermediateStruct
         /// <summary>
         /// Host name (or IP adress).
         /// </summary>
-        [XmlAttribute("Name")]
-        public String Name
-        {
+        [XmlAttribute ("Name")]
+        public String Name {
             get { return name; }
             set { name = value; }
         }
@@ -51,9 +46,8 @@ namespace Coc.Testing.Performance.IntermediateStruct
         /// <summary>
         /// Monitoring.
         /// </summary>
-        [XmlAttribute("Monitoring")]
-        public Boolean Monitoring
-        {
+        [XmlAttribute ("Monitoring")]
+        public Boolean Monitoring {
             get { return monitoring; }
             set { monitoring = value; }
         }
@@ -62,9 +56,8 @@ namespace Coc.Testing.Performance.IntermediateStruct
         /// <summary>
         /// Counter list.
         /// </summary>
-        [XmlElement("Counters")]
-        public List<Counter> Counters
-        {
+        [XmlElement ("Counters")]
+        public List<Counter> Counters {
             get { return counters; }
             set { counters = value; }
         }

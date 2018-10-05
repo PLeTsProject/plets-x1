@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Xml;
 using Plets.Core.ControlAndConversionStructures;
@@ -8,10 +8,8 @@ using Plets.Factory.AbstractParser;
 using Plets.Factory.AbstractSequenceGenerator;
 using Plets.Factory.Xmi.AbstractValidator;
 
-namespace Lesse.Core.ControlUnit
-{
-    public class ControlUnit
-    {
+namespace Lesse.Core.ControlUnit {
+    public class ControlUnit {
         #region Attributes
         private Validator validator;
         private SequenceGenerator sequenceGenerator;
@@ -29,17 +27,15 @@ namespace Lesse.Core.ControlUnit
         //public Tuple<List<GeneralUseStructure>, StructureType> listGeneralStructure;
 
         #region Constructor
-        public ControlUnit(StructureType type)
-        {
-            exporter = ParsedStructureExporterFactory.CreateExporter();
-            validator = ValidatorFactory.CreateValidator();
-            sequenceGenerator = SequenceGeneratorFactory.CreateSequenceGenerator(type);
-            scriptGenerator = ScriptGeneratorFactory.CreateScriptGenerator();
-            this.structureCollection = new StructureCollection();
+        public ControlUnit (StructureType type) {
+            exporter = ParsedStructureExporterFactory.CreateExporter ();
+            validator = ValidatorFactory.CreateValidator ();
+            sequenceGenerator = SequenceGeneratorFactory.CreateSequenceGenerator (type);
+            scriptGenerator = ScriptGeneratorFactory.CreateScriptGenerator ();
+            this.structureCollection = new StructureCollection ();
         }
 
-        public ControlUnit()
-        {
+        public ControlUnit () {
             // TODO: Complete member initialization
         }
         #endregion
@@ -50,51 +46,43 @@ namespace Lesse.Core.ControlUnit
         //TODO: Function-specific structure holder component to externalize structure variable definition from ControlUnit
 
         #region Public Methods
-        public void LoadModelingStructure(String path, String parserType)
-        {
-            parser = ParserFactory.CreateParser(parserType);
+        public void LoadModelingStructure (String path, String parserType) {
+            parser = ParserFactory.CreateParser (parserType);
             String name = "";
             this.path = path;
-            ResetAttributes();
-            structureCollection = parser.ParserMethod(path, ref name, null);
+            ResetAttributes ();
+            structureCollection = parser.ParserMethod (path, ref name, null);
             this.Name = name;
         }
 
-        public XmlDocument ExportParsedStructure()
-        {
-            return exporter.ToXmi(structureCollection.listGeneralStructure);
+        public XmlDocument ExportParsedStructure () {
+            return exporter.ToXmi (structureCollection.listGeneralStructure);
         }
 
-        public List<KeyValuePair<String, Int32>> ValidateModel(String filename)
-        {
-            return validator.Validate(structureCollection.listGeneralStructure, filename);
+        public List<KeyValuePair<String, Int32>> ValidateModel (String filename) {
+            return validator.Validate (structureCollection.listGeneralStructure, filename);
         }
 
-        public void GenerateSequence(StructureType type)
-        {
+        public void GenerateSequence (StructureType type) {
             int tcCount = 0;
             //transforma em grafo/fsm
             //aplica dfs/hsi
             //retorna uma lista de TestPlan.
-            listgeneralStructure = sequenceGenerator.GenerateSequence(structureCollection.listGeneralStructure, ref tcCount, type);
+            listgeneralStructure = sequenceGenerator.GenerateSequence (structureCollection.listGeneralStructure, ref tcCount, type);
 
             this.TestCaseCount = tcCount + 1; //soma 1 em função do TestCase geral;
         }
 
-
-        public void GenerateScript(String path)
-        {
+        public void GenerateScript (String path) {
             //scriptGenerator.GenerateScript(structureCollection.listGeneralStructure, path);
-            scriptGenerator.GenerateScript(listgeneralStructure, path);
+            scriptGenerator.GenerateScript (listgeneralStructure, path);
         }
 
-      
         #endregion
 
         #region Private Methods
-        private void ResetAttributes()
-        {
-           // generalStructure = null;
+        private void ResetAttributes () {
+            // generalStructure = null;
             TestCaseCount = 0;
         }
         #endregion

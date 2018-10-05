@@ -1,10 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Coc.Testing.Performance.AbstractTestCases
-{
+namespace Coc.Testing.Performance.AbstractTestCases {
     /// <summary>
     /// Class that represents a generic Transaction
     /// </summary>
@@ -19,7 +18,6 @@ namespace Coc.Testing.Performance.AbstractTestCases
             set { name = value; }
         }
 
-
         private Request begin;
         /// <summary>
         /// Begin trans.
@@ -28,7 +26,6 @@ namespace Coc.Testing.Performance.AbstractTestCases
             get { return begin; }
             set { begin = value; }
         }
-
 
         private Request end;
         /// <summary>
@@ -43,14 +40,12 @@ namespace Coc.Testing.Performance.AbstractTestCases
         /// <summary>
         /// Subtransactions.
         /// </summary>
-        public List<Subtransaction> Subtransactions
-        {
+        public List<Subtransaction> Subtransactions {
             get { return subtransactions; }
             set { subtransactions = value; }
         }
 
-        public override string ToString()
-        {
+        public override string ToString () {
             return this.Name;
         }
     }

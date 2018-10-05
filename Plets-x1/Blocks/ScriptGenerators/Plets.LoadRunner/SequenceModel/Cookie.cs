@@ -1,23 +1,17 @@
-﻿namespace Lesse.LoadRunner.SequenceModel
-{
-    public class Cookie
-    {
+namespace Lesse.LoadRunner.SequenceModel {
+    public class Cookie {
         private string name;
 
-        public string Name
-        {
+        public string Name {
             get { return name; }
             set { name = value; }
         }
 
-
-        public Cookie(string name)
-        {
+        public Cookie (string name) {
             this.name = name;
         }
 
-        public Cookie()
-        {
+        public Cookie () {
 
         }
     }

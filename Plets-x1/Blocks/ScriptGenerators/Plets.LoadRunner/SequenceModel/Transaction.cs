@@ -1,18 +1,15 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace Lesse.LoadRunner.SequenceModel
-{
+namespace Lesse.LoadRunner.SequenceModel {
     /// <summary>
     /// Class that represents a generic Transaction
     /// </summary>
-    public class Transaction
-    {
+    public class Transaction {
         private string name;
         /// <summary>
         /// Name.
         /// </summary>
-        public string Name
-        {
+        public string Name {
             get { return name; }
             set { name = value; }
         }
@@ -21,8 +18,7 @@ namespace Lesse.LoadRunner.SequenceModel
         /// <summary>
         /// Begin trans.
         /// </summary>
-        public Request Begin
-        {
+        public Request Begin {
             get { return begin; }
             set { begin = value; }
         }
@@ -31,8 +27,7 @@ namespace Lesse.LoadRunner.SequenceModel
         /// <summary>
         /// End trans.
         /// </summary>
-        public Request End
-        {
+        public Request End {
             get { return end; }
             set { end = value; }
         }
@@ -41,14 +36,12 @@ namespace Lesse.LoadRunner.SequenceModel
         /// <summary>
         /// Subtransactions.
         /// </summary>
-        public List<Subtransaction> Subtransactions
-        {
+        public List<Subtransaction> Subtransactions {
             get { return subtransactions; }
             set { subtransactions = value; }
         }
 
-        public override string ToString()
-        {
+        public override string ToString () {
             return this.Name;
         }
     }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Plets.Core.ControlAndConversionStructures;
@@ -7,12 +7,10 @@ using Plets.Core.Interfaces;
 using Plets.Modeling.FiniteStateMachine;
 using Plets.Modeling.TestPlanStructure;
 
-namespace Plets.Modeling.FiniteStateMachine.WP
-{
+namespace Plets.Modeling.FiniteStateMachine.WP {
     //Classe onde recebe uma FSM e gera sequencia de teste utilizado
     //o metodo Wp
-    public class Wp : SequenceGenerator
-    {
+    public class Wp : SequenceGenerator {
         //maquina onde será armazenado os estados 
         private FiniteStateMachine fsm = null;
         //lista de sequencia final
@@ -23,76 +21,68 @@ namespace Plets.Modeling.FiniteStateMachine.WP
         public List<List<String>> ListSequenceR { get; set; }
 
         //construtor do metodo Wp
-        public Wp(FiniteStateMachine fsm)
-        {
+        public Wp (FiniteStateMachine fsm) {
             // iniciando a lista  de sequencia
-            ListSequence = new List<string>();
+            ListSequence = new List<string> ();
             //iniciando a lista sequencia (Sequencia Estado X sequencia Máquina).
-            ListSequenceStateCoverAndWMachine = new List<List<String>>();
+            ListSequenceStateCoverAndWMachine = new List<List<String>> ();
             //inicializando a lista sequencia R.
-            ListSequenceR = new List<List<String>>();
+            ListSequenceR = new List<List<String>> ();
             //guardando uma referencia da máquina.
             this.fsm = fsm;
 
         }
 
-        public Wp()
-        {
+        public Wp () {
 
-            ListSequence = new List<string>();
+            ListSequence = new List<string> ();
             //iniciando a lista sequencia (Sequencia Estado X sequencia Máquina).
-            ListSequenceStateCoverAndWMachine = new List<List<String>>();
+            ListSequenceStateCoverAndWMachine = new List<List<String>> ();
             //inicializando a lista sequencia R.
-            ListSequenceR = new List<List<String>>();
+            ListSequenceR = new List<List<String>> ();
         }
         //metodo Wp
-        public List<List<String>> MethodWp()
-        {
+        public List<List<String>> MethodWp () {
             //adicionando nos estados wi e na máquina os conjunto W.
             #region  primeira fase do metodo Wp
             //metodo que adicina Wi da máquina.
-            SetWMachine(fsm);
+            SetWMachine (fsm);
             //metodo que retorna uma lista de sequencia concatenada entre as sequencia de cada estado com W da maquina.
             //conjunto Q concatena W da FSM.
-            ListSequenceStateCoverAndWMachine = concatenatesSequenceStateCoverAndWMachine(fsm);
+            ListSequenceStateCoverAndWMachine = concatenatesSequenceStateCoverAndWMachine (fsm);
             //remove os valores préfixados
-            removePreFixed(ListSequenceStateCoverAndWMachine);
+            removePreFixed (ListSequenceStateCoverAndWMachine);
             #endregion
             #region segunda fase do metodo Wp
             // Lista das sequncias final.
-            List<List<String>> rw = new List<List<string>>();
+            List<List<String>> rw = new List<List<string>> ();
             //R ⊗ W ou R=  conjunto TransitionCover (P) - conjunto StateCover (Q);
-            ListSequenceR = TransitionCoverLessStateCover(fsm);
+            ListSequenceR = TransitionCoverLessStateCover (fsm);
             //método que concatena as sequencias  R com as sequencia Wi de cada estado.
-            ConcatenateSequencesRandWStates(ListSequenceR, fsm, rw);
+            ConcatenateSequencesRandWStates (ListSequenceR, fsm, rw);
             #endregion
-            removePreFixed(rw);
-            rw = ListGroup(rw, ListSequenceStateCoverAndWMachine);
-            removePreFixed(rw);
+            removePreFixed (rw);
+            rw = ListGroup (rw, ListSequenceStateCoverAndWMachine);
+            removePreFixed (rw);
             //retona uma lista de sequencia de teste.
             return rw;
         }
 
-        private List<List<string>> ListGroup(List<List<string>> rw, List<List<string>> ListSequenceStateCoverAndWMachine)
-        {
-            List<List<string>> list = new List<List<string>>();
+        private List<List<string>> ListGroup (List<List<string>> rw, List<List<string>> ListSequenceStateCoverAndWMachine) {
+            List<List<string>> list = new List<List<string>> ();
 
-            foreach (List<String> line in ListSequenceStateCoverAndWMachine)
-            {
-                list.Add(line);
+            foreach (List<String> line in ListSequenceStateCoverAndWMachine) {
+                list.Add (line);
 
             }
 
-            foreach (List<String> line in rw)
-            {
-                list.Add(line);
+            foreach (List<String> line in rw) {
+                list.Add (line);
             }
             return list;
         }
 
-
         #region methods private
-
 
         /// <summary>
         /// concatena as sequencia R com as sequencia W de cada estado.
@@ -100,13 +90,11 @@ namespace Plets.Modeling.FiniteStateMachine.WP
         /// <param name="ListSequenceR"></param>
         /// <param name="fsm"></param>
         /// <param name="rw"></param>
-        private void ConcatenateSequencesRandWStates(List<List<String>> ListSequenceR, FiniteStateMachine fsm, List<List<String>> rw)
-        {
+        private void ConcatenateSequencesRandWStates (List<List<String>> ListSequenceR, FiniteStateMachine fsm, List<List<String>> rw) {
             //para cada linha da seuqencia R 
-            foreach (List<String> line in ListSequenceR)
-            {
+            foreach (List<String> line in ListSequenceR) {
                 //caminha sobre a maquina com as entradas R par verificar se as sequencia estão correta
-                MachineWalkthrough(line, fsm, rw);
+                MachineWalkthrough (line, fsm, rw);
             }
         }
         /// <summary>
@@ -115,23 +103,20 @@ namespace Plets.Modeling.FiniteStateMachine.WP
         /// <param name="seqLine"></param>
         /// <param name="fsm"></param>
         /// <param name="rw"></param>
-        private void MachineWalkthrough(List<String> seqLine, FiniteStateMachine fsm, List<List<String>> rw)
-        {
+        private void MachineWalkthrough (List<String> seqLine, FiniteStateMachine fsm, List<List<String>> rw) {
             //pe ga o estado inicial da maquina FSM.
             String s = fsm.InitialState.Name;
             //Estado que guardará o ultimo estado visitado
             State lastState = null;
             //para cada sequencia R
-            foreach (String seq in seqLine)
-            {
+            foreach (String seq in seqLine) {
                 //cria um estado com o nome
-                State state = new State(s);
+                State state = new State (s);
                 //pega a transição onde o estado passado por parametro e origem e a sequencia (seq) é a mesma.
-                Transition t = GetTransitionStateSource(state, seq, fsm.Transitions)[0];
+                Transition t = GetTransitionStateSource (state, seq, fsm.Transitions) [0];
                 //caso a transição não e encontrada  retorna uma excessão.
-                if (t == null)
-                {
-                    throw new System.ArgumentException("Sequence null");
+                if (t == null) {
+                    throw new System.ArgumentException ("Sequence null");
                 }
                 //pega o target da transição
                 s = t.TargetState.Name;
@@ -139,16 +124,15 @@ namespace Plets.Modeling.FiniteStateMachine.WP
                 lastState = t.TargetState;
             }
             //pega todos os valores de entrada na transição onde o estado e origem.
-            String[] arr = GetAllowedInputs(lastState);
+            String[] arr = GetAllowedInputs (lastState);
             //para cada entrada da transição
-            foreach (String seq in arr)
-            {
+            foreach (String seq in arr) {
                 //faz uma copia da lista de sequencia.
-                List<String> list = CopyList(seqLine);
+                List<String> list = CopyList (seqLine);
                 //adiciona  na lista de sequencia.
-                list.Add(seq);
+                list.Add (seq);
                 //adiciona na lista R
-                rw.Add(list);
+                rw.Add (list);
             }
         }
         /// <summary>
@@ -156,52 +140,45 @@ namespace Plets.Modeling.FiniteStateMachine.WP
         /// </summary>
         /// <param name="fsm"></param>
         /// <returns></returns>
-        private List<List<String>> TransitionCoverLessStateCover(FiniteStateMachine fsm)
-        {
+        private List<List<String>> TransitionCoverLessStateCover (FiniteStateMachine fsm) {
             //lista de sequencia do transitionCover para todos os estados da FSM.
-            List<List<String>> listSequenceTransitionCover = SequenceTransitionCover(fsm);
+            List<List<String>> listSequenceTransitionCover = SequenceTransitionCover (fsm);
             //lista de sequencia do StateCover para todos os estados da FSM.
-            List<List<String>> listStateCover = GetSequenceStateCover(fsm);
+            List<List<String>> listStateCover = GetSequenceStateCover (fsm);
 
             //lista do resultado R =  TransitionCover - StateCover.
-            List<List<String>> resultR = new List<List<string>>();
+            List<List<String>> resultR = new List<List<string>> ();
 
             //para cada sequencia da lista do Transitin Cover.
-            for (int i = 0; i < listSequenceTransitionCover.Count; i++)
-            {
+            for (int i = 0; i < listSequenceTransitionCover.Count; i++) {
                 //pega uma sequencia na posição i.
                 List<String> line = listSequenceTransitionCover[i];
                 //concatena as sequencia  .
                 String seq = "";
                 //para cada linha.
-                for (int j = 0; j < line.Count; j++)
-                {
+                for (int j = 0; j < line.Count; j++) {
                     //concatena as sequencia na posição j.
                     seq += line[j];
                 }
                 bool contem = false;
                 //para cada elemento (sequencia) 
-                for (int l = 0; l < listStateCover.Count; l++)
-                {
+                for (int l = 0; l < listStateCover.Count; l++) {
                     //pega a linha na lista na posição l.
                     List<String> line2 = listStateCover[l];
                     //String onde será concatenado as  sequencia de cada posição l.
                     String seq2 = "";
                     //para cada sequencia  da lista de sequencia do transitionCover.
-                    for (int k = 0; k < line2.Count; k++)
-                    {
+                    for (int k = 0; k < line2.Count; k++) {
                         //pega a sequencia na posição k e concatena.
                         seq2 += line2[k];
 
                     }
-                    if (seq.Equals(seq2) && contem != true)
-                    {
+                    if (seq.Equals (seq2) && contem != true) {
                         contem = true;
                     }
                 }
-                if (!contem)
-                {
-                    resultR.Add(line);
+                if (!contem) {
+                    resultR.Add (line);
                 }
             }
             //retorna a lista 
@@ -212,50 +189,43 @@ namespace Plets.Modeling.FiniteStateMachine.WP
         /// </summary>
         /// <param name="fsm"></param>
         /// <returns></returns>
-        private List<List<String>> SequenceTransitionCover(FiniteStateMachine fsm)
-        {
-            fsm = GetTransition(fsm);
+        private List<List<String>> SequenceTransitionCover (FiniteStateMachine fsm) {
+            fsm = GetTransition (fsm);
             //lista final do transitionCover;.
-            List<List<String>> listSequenceTransitionCover = new List<List<String>>();
+            List<List<String>> listSequenceTransitionCover = new List<List<String>> ();
             //lista com sequencia VAZIA para ser adicionado na lista final.
-            List<String> sequenceEmpty = new List<string>();
+            List<String> sequenceEmpty = new List<string> ();
             //adicona  na lista uma String vazia.
-            sequenceEmpty.Add("");
+            sequenceEmpty.Add ("");
             //adiciona na lista final a lista com a string vazia.
-            listSequenceTransitionCover.Add(sequenceEmpty);
+            listSequenceTransitionCover.Add (sequenceEmpty);
             //para cada estado da FSM
-            foreach (State state in fsm.States)
-            {
+            foreach (State state in fsm.States) {
                 //pega todas as sequencia de entrada que leve até o estado passado por paramentro
                 //concatenado com os valores de entradas(s) da transição onde o estado, que é passado por paramentro
                 //é origem.
-                String[][] arr = TransitionCover(state);
+                String[][] arr = TransitionCover (state);
                 //para cada sequencia.
-                for (int i = 0; i < arr.Length; i++)
-                {   //instaciando uma lista onde será adicionado as sequencia do TransitionCover.
-                    List<String> listAux = new List<string>();
+                for (int i = 0; i < arr.Length; i++) { //instaciando uma lista onde será adicionado as sequencia do TransitionCover.
+                    List<String> listAux = new List<string> ();
                     //para cada sequencia na pos (i)
-                    for (int j = 0; j < arr[i].Length; j++)
-                    {
+                    for (int j = 0; j < arr[i].Length; j++) {
                         //adicionan o elemento na pos i e j.
-                        listAux.Add(arr[i][j]);
+                        listAux.Add (arr[i][j]);
                     }
                     //adiciona as sequencia na lista final do TrnasitionCover.
-                    listSequenceTransitionCover.Add(listAux);
+                    listSequenceTransitionCover.Add (listAux);
                 }
             }
             //retorna a lista final com todas as sequencia da TransitionCover.
             return listSequenceTransitionCover;
         }
 
-        private FiniteStateMachine GetTransition(FiniteStateMachine fsm)
-        {
-            for (int i = 0; i < fsm.Transitions.Count; i++)
-            {
+        private FiniteStateMachine GetTransition (FiniteStateMachine fsm) {
+            for (int i = 0; i < fsm.Transitions.Count; i++) {
                 Transition t = fsm.Transitions[i];
-                if (t.Output.Equals("Falha", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    fsm.Transitions.Remove(t);
+                if (t.Output.Equals ("Falha", StringComparison.CurrentCultureIgnoreCase)) {
+                    fsm.Transitions.Remove (t);
                     i--;
                 }
             }
@@ -266,12 +236,11 @@ namespace Plets.Modeling.FiniteStateMachine.WP
         /// </summary>
         /// <param name="fsm"></param>
         /// <returns></returns>
-        private List<List<String>> concatenatesSequenceStateCoverAndWMachine(FiniteStateMachine fsm)
-        {
+        private List<List<String>> concatenatesSequenceStateCoverAndWMachine (FiniteStateMachine fsm) {
             //pega a sequencia do StateCover da máquina
-            List<List<String>> list = GetSequenceStateCover(fsm);
+            List<List<String>> list = GetSequenceStateCover (fsm);
             //concatena as sequencia StateCover com W da máquina
-            List<List<String>> listSequence = ConcatenateSequences(list, fsm.WiSet);
+            List<List<String>> listSequence = ConcatenateSequences (list, fsm.WiSet);
             //retona a lista com as sequencia gerada do metodo acima
             return listSequence;
         }
@@ -281,38 +250,32 @@ namespace Plets.Modeling.FiniteStateMachine.WP
         /// <param name="listStateCover"></param>
         /// <param name="listFsm"></param>
         /// <returns></returns>
-        private List<List<String>> ConcatenateSequences(List<List<String>> listStateCover, List<List<String>> listFsm)
-        {
+        private List<List<String>> ConcatenateSequences (List<List<String>> listStateCover, List<List<String>> listFsm) {
             //lista final da concatenação das sequencia
-            List<List<String>> listConcatenate = new List<List<string>>();
+            List<List<String>> listConcatenate = new List<List<string>> ();
             //para cada sequencia da lista
-            foreach (List<String> item in listStateCover)
-            {
+            foreach (List<String> item in listStateCover) {
                 //cria uma lista de  sequencia
-                List<String> seq = new List<String>();
+                List<String> seq = new List<String> ();
                 //para cada sequencia
-                foreach (String s in item)
-                {
+                foreach (String s in item) {
                     //se a sequncia for diferente de vazio
-                    if (!s.Equals(""))
-                    {
+                    if (!s.Equals ("")) {
                         //adiona na lista de sequencia
-                        seq.Add(s);
+                        seq.Add (s);
                     }
                 }
                 //para cada sequencia da lista da FSM
-                foreach (List<String> line in listFsm)
-                {
+                foreach (List<String> line in listFsm) {
                     //cria uma copia da lista
-                    List<String> listAux = CopyList(seq);
+                    List<String> listAux = CopyList (seq);
                     //para cada lista de sequencia
-                    foreach (String s1 in line)
-                    {
+                    foreach (String s1 in line) {
                         //adiciona na lista
-                        listAux.Add(s1);
+                        listAux.Add (s1);
                     }
                     //concatena a sequncia na lista.
-                    listConcatenate.Add(listAux);
+                    listConcatenate.Add (listAux);
                 }
             }
             //retorna a sequencia final da concatenação da sequencia STATECOVER e W da máquina
@@ -323,15 +286,13 @@ namespace Plets.Modeling.FiniteStateMachine.WP
         /// </summary>
         /// <param name="seq"></param>
         /// <returns></returns>
-        private List<String> CopyList(List<String> seq)
-        {
+        private List<String> CopyList (List<String> seq) {
             //cria uma lista de string
-            List<String> list = new List<String>();
+            List<String> list = new List<String> ();
             //para cada sequncia na lista
-            foreach (String item in seq)
-            {
+            foreach (String item in seq) {
                 //adiciona na lista
-                list.Add(item);
+                list.Add (item);
             }
             //retorna a lista
             return list;
@@ -341,34 +302,30 @@ namespace Plets.Modeling.FiniteStateMachine.WP
         /// </summary>
         /// <param name="fsm"></param>
         /// <returns></returns>
-        private List<List<String>> GetSequenceStateCover(FiniteStateMachine fsm)
-        {
+        private List<List<String>> GetSequenceStateCover (FiniteStateMachine fsm) {
             //cria um a lista de string
-            List<List<String>> listStateCover = new List<List<String>>();
+            List<List<String>> listStateCover = new List<List<String>> ();
             //cria uma lista de string par o conjunto VAZIO do primeiro estado
-            List<String> stateCoverInitial = new List<string>();
+            List<String> stateCoverInitial = new List<string> ();
             //adiciona um string vazia na lista
-            stateCoverInitial.Add("");
+            stateCoverInitial.Add ("");
             //adicona na lista do StateCover.
-            listStateCover.Add(stateCoverInitial);
+            listStateCover.Add (stateCoverInitial);
             //para ccada State da FSM
-            foreach (State state in fsm.States)
-            {
+            foreach (State state in fsm.States) {
                 //cria uma lista de string
-                List<String> list = new List<string>();
+                List<String> list = new List<string> ();
                 //busca o preambulo do estado passado por paramentro.
-                String[] arr = Preambulo(state);
+                String[] arr = Preambulo (state);
                 //para cada sequencia 
-                for (int i = 0; i < arr.Length; i++)
-                {
+                for (int i = 0; i < arr.Length; i++) {
                     //adiciona na lista 
-                    list.Add(arr[i]);
+                    list.Add (arr[i]);
                 }
                 //casso a lista for diferente de 0.
-                if (list.Count != 0)
-                {
+                if (list.Count != 0) {
                     //adicina na lista
-                    listStateCover.Add(list);
+                    listStateCover.Add (list);
                 }
             }
             //retona a lista do STATECOVER.
@@ -378,54 +335,45 @@ namespace Plets.Modeling.FiniteStateMachine.WP
         /// Este método obtem uma lista de pares de estado e uma lista com elementos do conjunto W.
         /// </summary>
         /// <param name="fsm"></param>
-        private void SetWMachine(FiniteStateMachine fsm)
-        {
+        private void SetWMachine (FiniteStateMachine fsm) {
             //lista de pares de estado.
-            List<StatePair> listStatePair = new List<StatePair>();
+            List<StatePair> listStatePair = new List<StatePair> ();
             //método que obtem os pares de estados.
-            GetListTransitionWi(fsm, listStatePair);
+            GetListTransitionWi (fsm, listStatePair);
             //metodo que remove os  pares iguais.
-            removeEqualsState(listStatePair);
+            removeEqualsState (listStatePair);
             //para cada par de estado da FSM.
-            foreach (StatePair statePair in listStatePair)
-            {
+            foreach (StatePair statePair in listStatePair) {
                 //obtem o conjunto W de cada par de estado.
-                GetWiStatePair(statePair, fsm);
+                GetWiStatePair (statePair, fsm);
 
             }
             //remove as sequência de entradas equivalentes.
-            RemoveEqualsSequence(fsm);
+            RemoveEqualsSequence (fsm);
         }
         /// <summary>
         /// método que remove sequencia repitidas do conjunto W da Máquina
         /// </summary>
         /// <param name="fsm"></param>
-        private void RemoveEqualsSequence(FiniteStateMachine fsm)
-        {
+        private void RemoveEqualsSequence (FiniteStateMachine fsm) {
 
-            for (int i = 0; i < fsm.WiSet.Count; i++)
-            {
+            for (int i = 0; i < fsm.WiSet.Count; i++) {
                 List<String> line = fsm.WiSet[i];
                 String column = "";
-                for (int j = 0; j < line.Count; j++)
-                {
+                for (int j = 0; j < line.Count; j++) {
                     column += line[j];
                 }
-                for (int k = i + 1; k < fsm.WiSet.Count; k++)
-                {
+                for (int k = i + 1; k < fsm.WiSet.Count; k++) {
                     List<String> line2 = fsm.WiSet[k];
                     String column2 = "";
-                    for (int l = 0; l < line2.Count; l++)
-                    {
+                    for (int l = 0; l < line2.Count; l++) {
                         column2 += line2[l];
                     }
-                    if (column.Equals(column2))
-                    {
-                        line2.Remove(column2);
+                    if (column.Equals (column2)) {
+                        line2.Remove (column2);
                         k--;
-                        if (line2.Count == 0)
-                        {
-                            fsm.WiSet.Remove(line2);
+                        if (line2.Count == 0) {
+                            fsm.WiSet.Remove (line2);
                         }
                     }
                 }
@@ -436,27 +384,21 @@ namespace Plets.Modeling.FiniteStateMachine.WP
         /// remove duplicate String
         /// </summary>
         /// <param name="rw"></param>
-        private void removePreFixed(List<List<string>> rw)
-        {
+        private void removePreFixed (List<List<string>> rw) {
 
-            for (int i = 0; i < rw.Count; i++)
-            {
+            for (int i = 0; i < rw.Count; i++) {
                 List<String> line = rw[i];
-                for (int j = i + 1; j < rw.Count; j++)
-                {
+                for (int j = i + 1; j < rw.Count; j++) {
                     List<String> line2 = rw[j];
-                    if (line.Count <= line2.Count)
-                    {
+                    if (line.Count <= line2.Count) {
                         String lineAux1 = "";
                         String lineAux2 = "";
-                        for (int k = 0; k < line.Count; k++)
-                        {
+                        for (int k = 0; k < line.Count; k++) {
                             lineAux1 += line[k];
                             lineAux2 += line2[k];
                         }
-                        if (lineAux1.Equals(lineAux2))
-                        {
-                            rw.RemoveAt(i);
+                        if (lineAux1.Equals (lineAux2)) {
+                            rw.RemoveAt (i);
                             i = 0;
                             line = rw[i];
                         }
@@ -469,25 +411,20 @@ namespace Plets.Modeling.FiniteStateMachine.WP
         /// </summary>
         /// <param name="statePair"></param>
         /// <param name="fsm"></param>
-        private void GetWiStatePair(StatePair statePair, FiniteStateMachine fsm)
-        {
-            Transition t = GetListTransitionOutputOfState(statePair, fsm);
-            if (t != null)
-            {
-                List<String> list = new List<string>();
-                list.Add(t.Input);
-                fsm.WiSet.Add(list);
-            }
-            else
-            {
-                List<String> listSeq = new List<string>();
-                GetListOutoutStatePair(listSeq, statePair, fsm);
-                List<String> list = new List<string>();
-                foreach (String i in listSeq)
-                {
-                    list.Add(i);
+        private void GetWiStatePair (StatePair statePair, FiniteStateMachine fsm) {
+            Transition t = GetListTransitionOutputOfState (statePair, fsm);
+            if (t != null) {
+                List<String> list = new List<string> ();
+                list.Add (t.Input);
+                fsm.WiSet.Add (list);
+            } else {
+                List<String> listSeq = new List<string> ();
+                GetListOutoutStatePair (listSeq, statePair, fsm);
+                List<String> list = new List<string> ();
+                foreach (String i in listSeq) {
+                    list.Add (i);
                 }
-                fsm.WiSet.Add(list);
+                fsm.WiSet.Add (list);
             }
         }
         /// <summary>
@@ -498,39 +435,32 @@ namespace Plets.Modeling.FiniteStateMachine.WP
         /// <param name="statePair"></param>
         /// <param name="fsm"></param>
         /// <returns></returns>
-        private List<string> GetListOutoutStatePair(List<string> listSeq, StatePair statePair, FiniteStateMachine fsm)
-        {
-            String[][] tcSi = TransitionCover(statePair.Si);
-            String[][] tcSj = TransitionCover(statePair.Sj);
+        private List<string> GetListOutoutStatePair (List<string> listSeq, StatePair statePair, FiniteStateMachine fsm) {
+            String[][] tcSi = TransitionCover (statePair.Si);
+            String[][] tcSj = TransitionCover (statePair.Sj);
             String inputEquals = "";
-            inputEquals = GetInputEquals(statePair.Si, statePair.Sj);
+            inputEquals = GetInputEquals (statePair.Si, statePair.Sj);
 
-            if (!inputEquals.Equals(""))
-            {
+            if (!inputEquals.Equals ("")) {
 
-                Transition t1 = GetTransitionStateSource(statePair.Si, inputEquals, fsm.Transitions)[0];
-                Transition t2 = GetTransitionStateSource(statePair.Sj, inputEquals, fsm.Transitions)[0];
+                Transition t1 = GetTransitionStateSource (statePair.Si, inputEquals, fsm.Transitions) [0];
+                Transition t2 = GetTransitionStateSource (statePair.Sj, inputEquals, fsm.Transitions) [0];
 
-                if (!t1.Output.Equals(t2.Output))
-                {
-                    listSeq.Add(inputEquals);
+                if (!t1.Output.Equals (t2.Output)) {
+                    listSeq.Add (inputEquals);
                     return listSeq;
-                }
-                else
-                {
-                    StatePair statPairAux = new StatePair();
-                    State s = new State(t1.TargetState.Name);
-                    State t = new State(t2.TargetState.Name);
+                } else {
+                    StatePair statPairAux = new StatePair ();
+                    State s = new State (t1.TargetState.Name);
+                    State t = new State (t2.TargetState.Name);
                     statPairAux.Si = s;
                     statPairAux.Sj = t;
                     statPairAux.Si.Name = s.Name;
                     statPairAux.Sj.Name = t.Name;
-                    GetListOutoutStatePair(listSeq, statPairAux, fsm);
+                    GetListOutoutStatePair (listSeq, statPairAux, fsm);
                 }
-            }
-            else
-            {
-                listSeq.Add(GetAllowedInputs(statePair.Si)[0]);
+            } else {
+                listSeq.Add (GetAllowedInputs (statePair.Si) [0]);
                 return listSeq;
             }
             return listSeq;
@@ -542,19 +472,15 @@ namespace Plets.Modeling.FiniteStateMachine.WP
         /// <param name="si"></param>
         /// <param name="sj"></param>
         /// <returns></returns>
-        private string GetInputEquals(State si, State sj)
-        {
-            String[] inputsSi = GetAllowedInputs(si);
-            String[] inputsSj = GetAllowedInputs(sj);
+        private string GetInputEquals (State si, State sj) {
+            String[] inputsSi = GetAllowedInputs (si);
+            String[] inputsSj = GetAllowedInputs (sj);
 
-            for (int i = 0; i < inputsSi.Length; i++)
-            {
+            for (int i = 0; i < inputsSi.Length; i++) {
                 String inputSi = inputsSi[i];
-                for (int j = 0; j < inputsSj.Length; j++)
-                {
+                for (int j = 0; j < inputsSj.Length; j++) {
                     String inputSj = inputsSj[j];
-                    if (inputSi.Equals(inputSj))
-                    {
+                    if (inputSi.Equals (inputSj)) {
                         return inputSi;
                     }
                 }
@@ -568,27 +494,20 @@ namespace Plets.Modeling.FiniteStateMachine.WP
         /// <param name="statePair"></param>
         /// <param name="fsm"></param>
         /// <returns></returns>
-        private Transition GetListTransitionOutputOfState(StatePair statePair, FiniteStateMachine fsm)
-        {
-            List<Transition> listTtransitionSource = new List<Transition>();
-            List<Transition> listTtransitionTarget = new List<Transition>();
-            foreach (Transition transition in fsm.Transitions)
-            {
-                if (statePair.Si.Name.Equals(transition.SourceState.Name))
-                {
-                    listTtransitionSource.Add(transition);
+        private Transition GetListTransitionOutputOfState (StatePair statePair, FiniteStateMachine fsm) {
+            List<Transition> listTtransitionSource = new List<Transition> ();
+            List<Transition> listTtransitionTarget = new List<Transition> ();
+            foreach (Transition transition in fsm.Transitions) {
+                if (statePair.Si.Name.Equals (transition.SourceState.Name)) {
+                    listTtransitionSource.Add (transition);
                 }
-                if (statePair.Sj.Name.Equals(transition.SourceState.Name))
-                {
-                    listTtransitionTarget.Add(transition);
+                if (statePair.Sj.Name.Equals (transition.SourceState.Name)) {
+                    listTtransitionTarget.Add (transition);
                 }
             }
-            foreach (var t1 in listTtransitionSource)
-            {
-                foreach (var t2 in listTtransitionTarget)
-                {
-                    if (t1.Input.Equals(t2.Input) && !t1.Output.Equals(t2.Output))
-                    {
+            foreach (var t1 in listTtransitionSource) {
+                foreach (var t2 in listTtransitionTarget) {
+                    if (t1.Input.Equals (t2.Input) && !t1.Output.Equals (t2.Output)) {
                         return t1;
                     }
                 }
@@ -596,21 +515,17 @@ namespace Plets.Modeling.FiniteStateMachine.WP
             return null;
         }
 
-        private void GetListTransitionWi(FiniteStateMachine fsm, List<StatePair> listStatePair)
-        {
-            for (int i = 0; i < fsm.States.Count; i++)
-            {
+        private void GetListTransitionWi (FiniteStateMachine fsm, List<StatePair> listStatePair) {
+            for (int i = 0; i < fsm.States.Count; i++) {
                 State s1 = fsm.States[i];
-                for (int j = i + 1; j < fsm.States.Count; j++)
-                {
+                for (int j = i + 1; j < fsm.States.Count; j++) {
                     State s2 = fsm.States[j];
-                    List<Transition> list = GetTransitionStateSource(s1, fsm.Transitions);
-                    foreach (Transition t in list)
-                    {
-                        StatePair statePair = new StatePair();
+                    List<Transition> list = GetTransitionStateSource (s1, fsm.Transitions);
+                    foreach (Transition t in list) {
+                        StatePair statePair = new StatePair ();
                         statePair.Si = s1;
                         statePair.Sj = s2;
-                        listStatePair.Add(statePair);
+                        listStatePair.Add (statePair);
                     }
                 }
             }
@@ -619,17 +534,13 @@ namespace Plets.Modeling.FiniteStateMachine.WP
         /// remove os pares de estados iguais.
         /// </summary>
         /// <param name="listStatePair"></param>
-        private void removeEqualsState(List<StatePair> listStatePair)
-        {
-            for (int i = 0; i < listStatePair.Count; i++)
-            {
+        private void removeEqualsState (List<StatePair> listStatePair) {
+            for (int i = 0; i < listStatePair.Count; i++) {
                 StatePair s1 = listStatePair[i];
-                for (int j = i + 1; j < listStatePair.Count; j++)
-                {
+                for (int j = i + 1; j < listStatePair.Count; j++) {
                     StatePair s2 = listStatePair[j];
-                    if (IsEquals(s1, s2))
-                    {
-                        listStatePair.Remove(s2);
+                    if (IsEquals (s1, s2)) {
+                        listStatePair.Remove (s2);
                         j--;
                     }
                 }
@@ -642,21 +553,16 @@ namespace Plets.Modeling.FiniteStateMachine.WP
         /// <param name="s1"></param>
         /// <param name="s2"></param>
         /// <returns></returns>
-        private bool IsEquals(StatePair s1, StatePair s2)
-        {
-            if (s1.Si.Name.Equals(s2.Si.Name) && s1.Sj.Name.Equals(s2.Sj.Name))
-            {
+        private bool IsEquals (StatePair s1, StatePair s2) {
+            if (s1.Si.Name.Equals (s2.Si.Name) && s1.Sj.Name.Equals (s2.Sj.Name)) {
                 return true;
             }
-            if (s1.Si.Name.Equals(s1.Sj.Name))
-            {
+            if (s1.Si.Name.Equals (s1.Sj.Name)) {
                 return true;
             }
-            if (s2.Si.Name.Equals(s2.Sj.Name))
-            {
+            if (s2.Si.Name.Equals (s2.Sj.Name)) {
                 return true;
-            }
-            else
+            } else
                 return false;
         }
         /// <summary>
@@ -666,14 +572,11 @@ namespace Plets.Modeling.FiniteStateMachine.WP
         /// <param name="s1"></param>
         /// <param name="list"></param>
         /// <returns></returns>
-        private List<Transition> GetTransitionStateSource(State s1, List<Transition> list)
-        {
-            List<Transition> listTransition = new List<Transition>();
-            foreach (Transition t in list)
-            {
-                if (t.SourceState.Name.Equals(s1.Name))
-                {
-                    listTransition.Add(t);
+        private List<Transition> GetTransitionStateSource (State s1, List<Transition> list) {
+            List<Transition> listTransition = new List<Transition> ();
+            foreach (Transition t in list) {
+                if (t.SourceState.Name.Equals (s1.Name)) {
+                    listTransition.Add (t);
                 }
             }
             return listTransition;
@@ -689,14 +592,11 @@ namespace Plets.Modeling.FiniteStateMachine.WP
         /// <param name="input"></param>
         /// <param name="list"></param>
         /// <returns></returns>
-        private List<Transition> GetTransitionStateSource(State s1, String input, List<Transition> list)
-        {
-            List<Transition> listTransition = new List<Transition>();
-            foreach (Transition t in list)
-            {
-                if (t.SourceState.Name.Equals(s1.Name) && t.Input.Equals(input))
-                {
-                    listTransition.Add(t);
+        private List<Transition> GetTransitionStateSource (State s1, String input, List<Transition> list) {
+            List<Transition> listTransition = new List<Transition> ();
+            foreach (Transition t in list) {
+                if (t.SourceState.Name.Equals (s1.Name) && t.Input.Equals (input)) {
+                    listTransition.Add (t);
                 }
             }
             return listTransition;
@@ -704,20 +604,18 @@ namespace Plets.Modeling.FiniteStateMachine.WP
         /// <summary>
         /// Shortcut for StateCover(State s, List-of-State visited) method.
         /// </summary>
-        public String[] Preambulo(State s)
-        {
-            List<State> visitedStates = new List<State>();
+        public String[] Preambulo (State s) {
+            List<State> visitedStates = new List<State> ();
             // System.Diagnostics.Debug.WriteLineIf(debug, "Strinting in " + s.Name);
-            visitedStates.Add(s); //cannot walk through S
-            return StateCover(s, visitedStates);
+            visitedStates.Add (s); //cannot walk through S
+            return StateCover (s, visitedStates);
         }
         /// <summary>
         /// Gets a preamble of a given state S.
         /// </summary>
-        private String[] StateCover(State s, List<State> visited)
-        {
+        private String[] StateCover (State s, List<State> visited) {
             //Initial State´s preamble is EPSILON
-            if (s.Name.Equals(fsm.InitialState.Name))
+            if (s.Name.Equals (fsm.InitialState.Name))
                 return new String[] { };
 
             string[] shortestPreamble = null;
@@ -725,27 +623,21 @@ namespace Plets.Modeling.FiniteStateMachine.WP
             string lastInput = "";
 
             //Get ancestors´ preambles
-            IEnumerable<Transition> filteredTransitions = fsm.Transitions.Where(x => x.TargetState.Name.Equals(s.Name));
-            List<Transition> initialTransitions = fsm.Transitions.Where(x => x.SourceState.Name.Equals(fsm.InitialState.Name) && x.TargetState.Name.Equals(s.Name)).ToList<Transition>();
+            IEnumerable<Transition> filteredTransitions = fsm.Transitions.Where (x => x.TargetState.Name.Equals (s.Name));
+            List<Transition> initialTransitions = fsm.Transitions.Where (x => x.SourceState.Name.Equals (fsm.InitialState.Name) && x.TargetState.Name.Equals (s.Name)).ToList<Transition> ();
 
-            if (initialTransitions.Count > 0)
-            {
+            if (initialTransitions.Count > 0) {
                 currentPreamble = new string[1];
                 lastInput = initialTransitions[0].Input;
                 currentPreamble[0] = lastInput;
                 return currentPreamble;
-            }
-            else
-            {
-                foreach (Transition transition in filteredTransitions)
-                {
+            } else {
+                foreach (Transition transition in filteredTransitions) {
 
-                    if (!(visited.Contains(transition.SourceState)) && !(transition.SourceState.Name.Equals(transition.TargetState.Name)))
-                    {
-                        visited.Add(transition.SourceState);
-                        currentPreamble = this.StateCover(transition.SourceState, visited);
-                        if (currentPreamble != null && shortestPreamble == null)
-                        {
+                    if (!(visited.Contains (transition.SourceState)) && !(transition.SourceState.Name.Equals (transition.TargetState.Name))) {
+                        visited.Add (transition.SourceState);
+                        currentPreamble = this.StateCover (transition.SourceState, visited);
+                        if (currentPreamble != null && shortestPreamble == null) {
                             shortestPreamble = currentPreamble;
                             lastInput = transition.Input;
                         }
@@ -756,30 +648,28 @@ namespace Plets.Modeling.FiniteStateMachine.WP
                 return null;
 
             //Creates a new preamble with size + 1
-            string[] preamble = new string[shortestPreamble.Count() + 1];
+            string[] preamble = new string[shortestPreamble.Count () + 1];
 
             //Copy antecessor preamble to the new preable
-            shortestPreamble.CopyTo(preamble, 0);
+            shortestPreamble.CopyTo (preamble, 0);
 
             //adds current transition input to current state S
-            preamble[preamble.Count() - 1] = lastInput;
+            preamble[preamble.Count () - 1] = lastInput;
 
             return preamble;
         }
         /// <summary>
         /// Gets the transitio cover of given state S.
         /// </summary>
-        private String[][] TransitionCover(State s)
-        {
+        private String[][] TransitionCover (State s) {
             //Concatenate preamble with allowed inputs.
             // debug = s.Name.Equals("4");
-            String[] preamble = this.Preambulo(s);
-            String[] allowedInputs = this.GetAllowedInputs(s);
+            String[] preamble = this.Preambulo (s);
+            String[] allowedInputs = this.GetAllowedInputs (s);
 
             String[][] transitionCover = new String[allowedInputs.Length][];
 
-            for (int i = 0; i < allowedInputs.Length; i++)
-            {
+            for (int i = 0; i < allowedInputs.Length; i++) {
                 string currentInput = allowedInputs[i];
                 transitionCover[i] = new String[preamble.Length + 1];
 
@@ -794,28 +684,24 @@ namespace Plets.Modeling.FiniteStateMachine.WP
         /// <summary>
         /// Gets the allowed inputs list of a given state S.
         /// </summary>
-        private String[] GetAllowedInputs(State s)
-        {
+        private String[] GetAllowedInputs (State s) {
             IEnumerable<string> inputs = from Transition transition in fsm.Transitions
-                                         where transition.SourceState.Equals(s)
-                                         select transition.Input;
-            return inputs.Distinct().ToArray();
+            where transition.SourceState.Equals (s)
+            select transition.Input;
+            return inputs.Distinct ().ToArray ();
         }
         #endregion
 
         // public override List<GeneralUseStructure> GenerateSequence(GeneralUseStructure model, ref int tcCount, StructureType type)
-        public override List<GeneralUseStructure> GenerateSequence(List<GeneralUseStructure> listGeneralStructure, ref int tcCount, StructureType type)
-        {
-            List<GeneralUseStructure> listScript = new List<GeneralUseStructure>();
+        public override List<GeneralUseStructure> GenerateSequence (List<GeneralUseStructure> listGeneralStructure, ref int tcCount, StructureType type) {
+            List<GeneralUseStructure> listScript = new List<GeneralUseStructure> ();
 
-            List<GeneralUseStructure> listSequenceGenerationStructure = base.ConvertStructure(listGeneralStructure, type);
+            List<GeneralUseStructure> listSequenceGenerationStructure = base.ConvertStructure (listGeneralStructure, type);
 
-            List<TestStep> listTestStep = new List<TestStep>();
+            List<TestStep> listTestStep = new List<TestStep> ();
 
-            foreach (GeneralUseStructure sgs in listSequenceGenerationStructure)
-            {
-                this.fsm = (FiniteStateMachine)sgs;
-
+            foreach (GeneralUseStructure sgs in listSequenceGenerationStructure) {
+                this.fsm = (FiniteStateMachine) sgs;
 
             }
 

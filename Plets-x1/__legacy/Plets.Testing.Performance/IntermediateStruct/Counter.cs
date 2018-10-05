@@ -1,11 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace Coc.Testing.Performance.IntermediateStruct
-{
+namespace Coc.Testing.Performance.IntermediateStruct {
     /// <summary>
     /// Class that represents a generic Counter
     /// </summary>
@@ -16,7 +15,7 @@ namespace Coc.Testing.Performance.IntermediateStruct
         /// <summary>
         /// Counter name.
         /// </summary>
-        [XmlAttribute("Name")]
+        [XmlAttribute ("Name")]
         public string Name {
             get { return name; }
             set { name = value; }
@@ -26,7 +25,7 @@ namespace Coc.Testing.Performance.IntermediateStruct
         /// <summary>
         /// Thresholds. Expected SLA value.
         /// </summary>
-        [XmlAttribute("Thresholds")]
+        [XmlAttribute ("Thresholds")]
         public string Thresholds {
             get { return thresholds; }
             set { thresholds = value; }

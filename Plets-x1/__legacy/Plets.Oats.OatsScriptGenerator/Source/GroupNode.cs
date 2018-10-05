@@ -1,13 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Lesse.Modeling.Uml;
 
-namespace Coc.Data.Xmi.Script
-{
-    public class GroupNode
-    {
+namespace Coc.Data.Xmi.Script {
+    public class GroupNode {
 
         private GroupNode father;
         private GroupNode prevSibling;
@@ -15,56 +13,45 @@ namespace Coc.Data.Xmi.Script
         private string groupName;
         private List<UmlTransition> transitions;
         private List<GroupNode> subGroups;
-        
-        public GroupNode()
-        {
+
+        public GroupNode () {
             this.groupName = "";
             this.nextSibling = null;
             this.prevSibling = null;
             this.father = null;
-            this.SubGroups = new List<GroupNode>();
-            this.transitions = new List<UmlTransition>();
+            this.SubGroups = new List<GroupNode> ();
+            this.transitions = new List<UmlTransition> ();
         }
-        
-        public string GroupName
-        {
+
+        public string GroupName {
             get { return groupName; }
             set { groupName = value; }
         }
 
-        public GroupNode Father
-        {
+        public GroupNode Father {
             get;
             set;
         }
 
-        public GroupNode PrevSibling
-        {
+        public GroupNode PrevSibling {
             get;
             set;
         }
 
-        public GroupNode NextSibling
-        {
+        public GroupNode NextSibling {
             get;
             set;
         }
 
-
-        public List<UmlTransition> Transitions
-        {
+        public List<UmlTransition> Transitions {
             get { return transitions; }
             set { transitions = value; }
         }
 
-        public List<GroupNode> SubGroups
-        {
+        public List<GroupNode> SubGroups {
             get { return subGroups; }
             set { subGroups = value; }
         }
-
-
-
 
     }
 }

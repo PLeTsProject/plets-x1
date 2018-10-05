@@ -1,11 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Plets.Modeling.FiniteStateMachine;
 
-namespace Plets.Modeling.Vfsm
-{
-    public class Vfsm
-    {
+namespace Plets.Modeling.Vfsm {
+    public class Vfsm {
         #region Attributes
         public State StateInitial { get; set; }
         public List<State> ListStates { get; set; }
@@ -18,15 +16,14 @@ namespace Plets.Modeling.Vfsm
         #endregion
 
         #region Constructor
-        public Vfsm(String n)
-        {
+        public Vfsm (String n) {
             Name = n;
-            ListTransition = new List<TransitionVfsm>();
-            ListAlphabetInput = new List<string>();
-            ListAlphabetOutput = new List<string>();
-            ListStates = new List<State>();
-            ListOfVariableInitial = new List<Variable>();
-            ListOfGuardian = new List<Variable>();
+            ListTransition = new List<TransitionVfsm> ();
+            ListAlphabetInput = new List<string> ();
+            ListAlphabetOutput = new List<string> ();
+            ListStates = new List<State> ();
+            ListOfVariableInitial = new List<Variable> ();
+            ListOfGuardian = new List<Variable> ();
         }
         #endregion
     }

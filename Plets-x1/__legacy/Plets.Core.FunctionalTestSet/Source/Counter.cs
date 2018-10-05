@@ -1,18 +1,15 @@
-﻿using System;
+using System;
 
-namespace Plets.Modeling.TestSuitStructure
-{
+namespace Plets.Modeling.TestSuitStructure {
     /// <summary>
     /// Class that represents a generic Counter
     /// </summary>
-    public class Counter
-    {
+    public class Counter {
         private string name;
         /// <summary>
         /// Counter name.
         /// </summary>
-        public string Name
-        {
+        public string Name {
             get { return name; }
             set { name = value; }
         }
@@ -21,8 +18,7 @@ namespace Plets.Modeling.TestSuitStructure
         /// <summary>
         /// Thresholds. Expected SLA value.
         /// </summary>
-        public Object Thresholds
-        {
+        public Object Thresholds {
             get { return thresholds; }
             set { thresholds = value; }
         }
