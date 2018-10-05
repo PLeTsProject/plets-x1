@@ -68,6 +68,8 @@ namespace Plets.Core.FiniteStateMachine {
             return ret;
         }
 
+        public override int GetHashCode() => base.GetHashCode();
+
         // override object.Equals
         public override bool Equals (object obj) {
             if (!(obj is StateNode))
@@ -81,13 +83,6 @@ namespace Plets.Core.FiniteStateMachine {
             for (int i = 0; i < this.preamble.Length; i++)
                 if (this.preamble[i] != o.preamble[i])
                     return false;
-            /*
-            if (o.children.Count != this.children.Count)
-                return false;
-            foreach (StateNode s in this.children)
-                if (!o.children.Contains(s))
-                    return false;
-            //*/
             return true;
         }
     }
