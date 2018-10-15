@@ -23,7 +23,6 @@ We organized the project source-code in a few folder.
 - *Products*: Recipies for build the many products of PLeTs. Since there are many possible products, only a few recipies are provided. Take them as example so that you can build your own products (or ask us to do so).
 - *Tools*: Some scripts and goodies.
 
-
 ## An overview on the architecture
 
 We have three different components in this project.
@@ -38,3 +37,4 @@ The following picture illustrate the relation between FCs (blocks), DSs (core) a
 For now, we aim to provide the following FCs (in yellow) and DSs (in orange). Please note that no shared lib is being used, but we intend to do so soon.
 
 ![Block and core structures.](https://raw.githubusercontent.com/PLets-x1/plets-x1/master/Docs/Plets-x1-level2-diagram.png)
+
