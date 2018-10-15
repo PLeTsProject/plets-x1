@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk" TargetFramework=".NETStandard,Version=v2.1" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>  
+    <AssemblyName>Plets.Core.FiniteStateMachine</AssemblyName>  
+    <OutputPath>../../../Build</OutputPath>  
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+  <!-- This project should not have any dependency -->
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data" />
+  </ItemGroup>
+  <ItemGroup>
+	<Compile Include="./Source/*.cs" />
+  </ItemGroup>
+  <Target Name="Build">  
+    <Csc Sources="@(Compile)" References="@(Reference)" OutputAssembly="$(OutputPath)/$(AssemblyName).dll" />
+  </Target>  
+</Project>

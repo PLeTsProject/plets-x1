@@ -1,0 +1,3 @@
+BROKERS:
+Brokers replace older executor components. They are responsible for running the 
+testing tool using generated test scripts and collecting their results.

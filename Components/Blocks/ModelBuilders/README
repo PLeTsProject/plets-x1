@@ -1,0 +1,6 @@
+MODEL BUILDERS:
+
+Model builder replace old parsers. These components are now 
+responsible not only for parsing the file but also for converting
+parsed structures into a single formal model, which can be annotated 
+with additional information.

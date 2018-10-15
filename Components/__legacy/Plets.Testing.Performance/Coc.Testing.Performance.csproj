@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1D82C00C-F55F-41CC-83A7-63A18B017E85}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Coc.Testing.Performance</RootNamespace>
+    <AssemblyName>Coc.Testing.Performance</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Default|AnyCPU'">
+    <OutputPath>..\..\__output\plets\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'OATS-Based FTT|AnyCPU'">
+    <OutputPath>..\..\__output\plets\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MTM-Based FTT %28DFS%29|AnyCPU'">
+    <OutputPath>..\..\__output\plets\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MTM-Based FTT %28HSI%29|AnyCPU'">
+    <OutputPath>..\..\__output\plets\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MTM-Based FTT %28DFS-HSI%29|AnyCPU'">
+    <OutputPath>..\..\__output\plets\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MTM-Based FTT %28DFS-HSI-WP%29|AnyCPU'">
+    <OutputPath>..\..\__output\plets\</OutputPath>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MTM-Based FTT %28WP%29|AnyCPU'">
+    <OutputPath>..\..\__output\plets\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'LR-Based PTT %28HSI|AnyCPU'">
+    <OutputPath>..\..\__output\plets\</OutputPath>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'TCC_Edemar|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\__output\plets\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>..\..\__output\plets\Coc.Testing.Performance.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'OATS_Giliardi|AnyCPU'">
+    <OutputPath>bin\OATS_Giliardi\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AbstractTestCases\Cookie.cs" />
+    <Compile Include="AbstractTestCases\Counter.cs" />
+    <Compile Include="AbstractTestCases\Host.cs" />
+    <Compile Include="AbstractTestCases\Metric.cs" />
+    <Compile Include="AbstractTestCases\Parameter.cs" />
+    <Compile Include="AbstractTestCases\Request.cs" />
+    <Compile Include="AbstractTestCases\Rule.cs" />
+    <Compile Include="AbstractTestCases\SaveParameter.cs" />
+    <Compile Include="AbstractTestCases\Scenario.cs" />
+    <Compile Include="AbstractTestCases\Subtransaction.cs" />
+    <Compile Include="AbstractTestCases\TestCase.cs" />
+    <Compile Include="AbstractTestCases\Transaction.cs" />
+    <Compile Include="Importers\UmlToFsm.cs" />
+    <Compile Include="IntermediateStruct\Cookie.cs" />
+    <Compile Include="IntermediateStruct\Counter.cs" />
+    <Compile Include="IntermediateStruct\Host.cs" />
+    <Compile Include="Importers\UmlModelImporter.cs" />
+    <Compile Include="IntermediateStruct\Metric.cs" />
+    <Compile Include="IntermediateStruct\Parameter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="IntermediateStruct\Request.cs" />
+    <Compile Include="IntermediateStruct\SaveParameter.cs" />
+    <Compile Include="IntermediateStruct\Scenario.cs" />
+    <Compile Include="IntermediateStruct\Subtransaction.cs" />
+    <Compile Include="IntermediateStruct\TestCase.cs" />
+    <Compile Include="IntermediateStruct\TestSuit.cs" />
+    <Compile Include="IntermediateStruct\Transaction.cs" />
+    <Compile Include="IntermediateStruct\Transition.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Lesse.Core.ControlAndConversionStructures\Lesse.Core.ControlAndConversionStructures.csproj">
+      <Project>{AC4DEDF3-8BC9-4B66-92C5-858A1AB00A27}</Project>
+      <Name>Lesse.Core.ControlAndConversionStructures</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lesse.Modeling.FiniteStateMachine\Lesse.Modeling.FiniteStateMachine.csproj">
+      <Project>{1CC27328-CE37-4147-9C53-4A530B8B3E7F}</Project>
+      <Name>Lesse.Modeling.FiniteStateMachine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lesse.Modeling.Uml\Lesse.Modeling.Uml.csproj">
+      <Project>{AC0CEEEF-C2F2-45FA-904A-2E758A6B5A3A}</Project>
+      <Name>Lesse.Modeling.Uml</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

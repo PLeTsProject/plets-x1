@@ -1,0 +1,38 @@
+[10:14] Waiting for file containing test data.
+//----------------------------------------------------------------------------------------
+[10:14] C:\Users\COC-7-01\Desktop\head\__projects\OgmaOATSParser\GLC\script.java
+[10:14] Initializing file parsing...
+[10:14] Validating...
+[10:14] Parsing finished without issues.
+[10:14] XMI file saved in C:\Users\COC-7-01\Desktop\head\__projects\OgmaOATSParser\GLC\gerado.xml
+[10:14] XLS files saved at C:\Users\COC-7-01\Desktop\head\__output\plets\Result Files\
+//----------------------------------------------------------------------------------------
+[10:14] C:\Users\COC-7-01\Desktop\head\__projects\OgmaOATSParser\GLC\script2.java
+[10:14] Initializing file parsing...
+[10:15] Validating...
+[10:15] Parsing finished without issues.
+[10:15] XMI file saved in C:\Users\COC-7-01\Desktop\head\__projects\OgmaOATSParser\GLC\gerado2.xml
+[10:15] XLS files saved at C:\Users\COC-7-01\Desktop\head\__output\plets\Result Files\
+//----------------------------------------------------------------------------------------
+[10:15] C:\Users\COC-7-01\Desktop\head\__projects\OgmaOATSParser\GLC\script3.java
+[10:15] Initializing file parsing...
+[10:15] [ERROR] Input import and following terms are not of OATS type; Input public and following terms are not of CLASS type; One of the identified items was in an invalid format.
+//----------------------------------------------------------------------------------------
+[10:15] C:\Users\COC-7-01\Desktop\head\__projects\OgmaOATSParser\GLC\script4.java
+[10:15] Initializing file parsing...
+[10:16] Validating...
+[10:16] Parsing finished without issues.
+[10:16] XMI file saved in C:\Users\COC-7-01\Desktop\head\__projects\OgmaOATSParser\GLC\gerado4.xml
+[10:16] XLS files saved at C:\Users\COC-7-01\Desktop\head\__output\plets\Result Files\
+//----------------------------------------------------------------------------------------
+[10:16] C:\Users\COC-7-01\Desktop\head\__projects\OgmaOATSParser\GLC\script5.java
+[10:16] Initializing file parsing...
+[10:16] [ERROR] Input import and following terms are not of OATS type; Input public and following terms are not of CLASS type; One of the identified items was in an invalid format.
+//----------------------------------------------------------------------------------------
+[10:16] C:\Users\COC-7-01\Desktop\head\__projects\OgmaOATSParser\GLC\script6.java
+[10:16] Initializing file parsing...
+[10:16] [ERROR] Input import and following terms are not of OATS type; Input public and following terms are not of CLASS type; One of the identified items was in an invalid format.
+//----------------------------------------------------------------------------------------
+[10:16] C:\Users\COC-7-01\Desktop\head\__projects\OgmaOATSParser\GLC\script7.java
+[10:16] Initializing file parsing...
+[10:16] [ERROR] Input import and following terms are not of OATS type; Input public and following terms are not of CLASS type; One of the identified items was in an invalid format.

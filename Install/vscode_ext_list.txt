@@ -1,0 +1,23 @@
+This file holds a brief tutorial on how to 
+install extension to VisualStudio Code and
+a list of some of the most valuable extension
+for C#.
+
+Installation.
+1) Open VisualStudio Code by typeing "$code" in your terminal.
+2) Press CTRL+LSHIFT+X. This will bring the extensions menu.
+3) Type the name of desired extension into search box.
+4) Press the install button, which is placed near the ext. icon.
+5) Wait for finish and do the same for other extensions.
+
+Extension list.
+1) C# (by Microsoft)
+2) C# FixFormat (by Leopotam)
+3) C# XML Documentation Comments Support for VisualStudio Code (by Keisuke Kato)
+4) CodeRunner (by Jun Ham)
+5a) C# Extensions (by jchannon)
+5b) msbuild Tools (by sterin)
+6) vscode-solution-explorer (by Fernando Escobar) 
+
+Notes.
+Choose either 5a or 5b. Cannot use both.

@@ -1,0 +1,36 @@
+//----------------------------------------------------------------------------------------
+*GERAL
+- Modelo gerado incorretamente se são carregados vários na mesma execução. Ex.: carrega
+script1, gera .xmi, gera .xls; carrega script2, gera .xmi, gera .xls. O modelo gerado pelo
+script2 não abriu no Astah;
+- 
+//----------------------------------------------------------------------------------------
+*script1.java
+- Ok;
+//----------------------------------------------------------------------------------------
+*script2.java
+- Existe uma ação dblClick que não está mapeada no arquivo Keywords. Lá a palavra
+correspondente é "doubleclick";
+- O resto está ok;
+//----------------------------------------------------------------------------------------
+*script3.java
+- Exceção no parser -> CORRIGIDO;
+- Existe um objeto selectBox que executa uma ação "selectOptionByText", e esta ação tem
+parâmetros no script. Isto ainda não foi tratado e, portanto, a equivalência no arquivo
+keywords não é bem-sucedida;
+//----------------------------------------------------------------------------------------
+*script4.java
+- Ok;
+- SCRIPT IGUAL AO SCRIPT1;
+//----------------------------------------------------------------------------------------
+*script5.java
+- Exceção no parser;
+- Script não utiliza arquivo .properties;
+//----------------------------------------------------------------------------------------
+*script6.java
+- Exceção no parser;
+- Script não utiliza arquivo .properties;
+//----------------------------------------------------------------------------------------
+*script7.java
+- Exceção no parser;
+//----------------------------------------------------------------------------------------	
