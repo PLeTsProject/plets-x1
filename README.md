@@ -1,46 +1,40 @@
 # Welcome to plets-x1 repository.
 
 ## What is plets?
-PLeTs (sometimes written as *plets*) is a product line of testing tools. Products from plets are able to generate testing script several testing tools. All necessary data is extracted from system's models.
+PLeTs (sometimes written as *plets*) is a product line of software testing tools for model-based testing. Products from plets are capable of generating testing scripts for using with several testing tools, including on-the-shelf and free open-source solutions. 
 
-## What is *plets-x1* and why there are many plets?
+Most of products generate extended formal models (e.g. finite state machines) from system models (e.g. UML diagrams). Then, a sequence generation method is applied to the generated formal model. The output of sequence generation methods is a set of test cases ready to be converted to technology-specific scripts. The whole process is fully automated by plets products.
 
-We are currrently aware of 3 projects involving plets.
+## Project status
 
-- [LESSE's plets project](https://github.com/GiliSchmidt/PleTs-Testing). This project is under development by LESSE lab at UNIPAMPA. This version of plets is built over .NET Framework 4.5 and is made to run on Windows systems.
-- [Plets-v](https://github.com/AndersonDomingues/plets-v). This is an experimental project and presents a new organisation and corrections to architectural flaws of previous version. Also, this version is built over Dotnet Core 2.2, which target Windows, Linux and MacOS systems.
-- [Plets-x1](https://github.com/AndersonDomingues/plets-x1). This is an experimental project. Why do we need to correct flaws when we can blow everything up and build from scratch? This version of plets is the result of lone effort for creating a new plets experience. However, there's no free lunch, and we pay the price of having a nice and flawless project by taking more time to deliver results when comparing to previous projets. This version is also built over Dotnet Core 2.2 and targets multiple operating systems as well.
+Plets is not a tool, but a family of tools. In the past, some of these tools were succeffully adopted in industrial context and proven to reduce effort when designing test suites for web applications []. Tools for other domains were also provided [][]. The goal of this project is to provide a configurable architecture that offers the benefits from all previous deployed tools while allowing new tools to be easily designed.
 
-## How is this project files organized?
+However, there's no free lunch, and we pay the price of having a nice and flawless project by taking more time to deliver results when comparing to previous projets involving plets. Although we are currently working on the project, there is no fixed time to deliver any update. However, feel free to contact us regarding the project, since we write e-mails faster than we write code (to be verified). 
 
-We organized the project in the following folders. 
+Plets-x1 is built over Dotnet Core 2.1 and targets multiple operating systems. 
 
-- *Docs*: Self-explanatorie, we store some useful documentation here.
-- *Products*: Scripts for build many products of PLeTs. Since there are many possible products, only a few scripts are available so that you can use them as examples to build your own products.
-- *Tools*: Some scripts and goodies that makes your life easier.
-- *Src*: Source code of the project. You will see three other folders inside src because plets-x1 have three kind of components. We explain them below.
+## How is this project organized?
 
-## What is the difference between blocks, core and shared components?
+We organized the project source-code in a few folder. 
+
+- *Build*: folder to where compiled products are deployed.
+- *Docs*: Self-explanatorie, we store some useful documentation here. For now, we have only a few pictures, but it tends to change in a near future.
+- *Plets-x1*: Source code of the project. You will see a couple folders inside `/plets-x1`. We explain them in the next section.
+- *Products*: Recipies for build the many products of PLeTs. Since there are many possible products, only a few recipies are provided. Take them as example so that you can build your own products (or ask us to do so).
+- *Tools*: Some scripts and goodies.
+
+
+## An overview on the architecture
 
 We have three different components in this project.
-- *Blocks*: Parts of products that have some specific function as, for example, parsing some kind of file.
-- *Core*: Data structures that blocks use when communicating with each other. 
-- *Shared*: Pieces of software that can be used by several blocks. An example could be a library to handle some kind of file.
+- *Functional Components (FCs)* - `plets-x1/blocks`: Parts of products that have some specific function as, for example, parsing some kind of file.
+- *Data Structures (DSs)* - `plets-x1/core`: Data structures that functional components use when communicating to each other. 
+- *Shared Libraries (SLs)* - `plets-x1/shared`: Pieces of software that can be used into several blocks. An example could be a library to handle some kind of file.
 
-The following picture illustrate the relation between these three kind of components.
+The following picture illustrate the relation between FCs (blocks), DSs (core) and SLs (shared libs.).
 
 ![Relation between types of components.](https://raw.githubusercontent.com/Plets-x1/plets-x1/master/Docs/plets-x1%20-%20core%2C%20shared%20and%20blocks.png)
 
-For now, we aim to provide the following blocks (in yellow) and core structures (in orange).
+For now, we aim to provide the following FCs (in yellow) and DSs (in orange). Please note that no shared lib is being used, but we intend to do so soon.
 
 ![Block and core structures.](https://raw.githubusercontent.com/PLets-x1/plets-x1/master/Docs/Plets-x1-level2-diagram.png)
-
-No shared lib is being used, but we intend to do so in a near future.
-
-## How to clone this repo
-
-First, you need to clone this repo by entering the following command.
-
-`git clone https://github.com/PLeTsProject/plets-x1.git --recurse-submodules`
-
-Please be aware that the you will be also cloning submodules' code and the operation may take a while. Each submodule has its own repository and pull requests should address them.
