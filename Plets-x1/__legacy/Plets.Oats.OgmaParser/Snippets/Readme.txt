@@ -1,1 +1,0 @@
-﻿To install the snippets, press Ctrl K B and click Import.

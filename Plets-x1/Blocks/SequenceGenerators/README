@@ -1,4 +1,0 @@
-SEQUENCE GENERATOR:
-A sequence generator apply some sequence generation method over 
-some formal model in order to generate sequences. Generated sequences
-are annotated with test information as well.

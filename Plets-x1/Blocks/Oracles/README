@@ -1,6 +1,0 @@
-ORACLE:
-
-An oracle is similar to a checker (from verification). It receives both 
-systems' reference model and test results as parameters and outputs a
-comparison of them. The test passes when the expected results from the 
-reference model matches the test results.
