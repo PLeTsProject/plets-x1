@@ -6,3 +6,15 @@
 	path = Components/Blocks/ScriptGenerators/LoadRunnerScriptGenerator
 	url = https://github.com/plets-x1/LoadRunnerScriptGenerator
 	branch = master
+[submodule "Components/Blocks/SequenceGenerators/DfsSequenceGenerator"]
+	path = Components/Blocks/SequenceGenerators/DfsSequenceGenerator
+	url = https://github.com/plets-x1/DfsSequenceGenerator
+	branch = master
+[submodule "Components/Blocks/SequenceGenerators/HsiSequenceGenerator"]
+	path = Components/Blocks/SequenceGenerators/HsiSequenceGenerator
+	url = https://github.com/plets-x1/HsiSequenceGenerator
+	branch = master
+[submodule "Components/Blocks/SequenceGenerators/WPSequenceGenerator"]
+	path = Components/Blocks/SequenceGenerators/WPSequenceGenerator
+	url = https://github.com/plets-x1/WPSequenceGenerator
+	branch = master
