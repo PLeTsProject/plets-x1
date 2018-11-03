@@ -1,0 +1,4 @@
+[submodule "Components/Blocks/Parsers/AstahXmiParser"]
+	path = Components/Blocks/Parsers/AstahXmiParser
+	url = https://github.com/plets-x1/AstahXmiParser
+	branch = master
