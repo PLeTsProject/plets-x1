@@ -26,3 +26,11 @@
 	path = Components/Blocks/Validators/FunctionalValidator
 	url = https://github.com/plets-x1/FunctionalValidator
 	branch = master
+[submodule "Components/Core/FiniteStateMachine"]
+	path = Components/Core/FiniteStateMachine
+	url = https://github.com/plets-x1/FiniteStateMachine
+	branch = master
+[submodule "Components/Core/UmlDataStructure"]
+	path = Components/Core/UmlDataStructure
+	url = https://github.com/plets-x1/UmlDataStructure
+	branch = master
