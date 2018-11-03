@@ -34,3 +34,7 @@
 	path = Components/Core/UmlDataStructure
 	url = https://github.com/plets-x1/UmlDataStructure
 	branch = master
+[submodule "Components/Blocks/ScriptGenerators/MTMScriptGenerator"]
+	path = Components/Blocks/ScriptGenerators/MTMScriptGenerator
+	url = https://github.com/plets-x1/MTMScriptGenerator
+	branch = master
