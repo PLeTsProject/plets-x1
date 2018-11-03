@@ -18,3 +18,11 @@
 	path = Components/Blocks/SequenceGenerators/WPSequenceGenerator
 	url = https://github.com/plets-x1/WPSequenceGenerator
 	branch = master
+[submodule "Components/Blocks/Validators/PerformanceValidator"]
+	path = Components/Blocks/Validators/PerformanceValidator
+	url = https://github.com/plets-x1/PerformanceValidator
+	branch = master
+[submodule "Components/Blocks/Validators/FunctionalValidator"]
+	path = Components/Blocks/Validators/FunctionalValidator
+	url = https://github.com/plets-x1/FunctionalValidator
+	branch = master
