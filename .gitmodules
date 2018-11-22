@@ -46,3 +46,7 @@
 	path = Components/Core/ControlStructure/ControlStructure
 	url = https://github.com/plets-x1/ControlStructure
 	branch = master
+[submodule "Components/Core/FunctionalTestSet/FunctionalTestSet"]
+	path = Components/Core/FunctionalTestSet/FunctionalTestSet
+	url = https://github.com/plets-x1/FunctionalTestSet
+	branch = master
