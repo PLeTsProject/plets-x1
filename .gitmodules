@@ -58,3 +58,7 @@
 	path = Components/Core/Interfaces
 	url = https://github.com/plets-x1/Interfaces
 	branch = master
+[submodule "Components/Core/PerformanceTestSet"]
+	path = Components/Core/PerformanceTestSet
+	url = https://github.com/plets-x1/PerformanceTestSet
+	branch = master
