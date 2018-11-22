@@ -66,3 +66,7 @@
 	path = Components/Core/Vfsm
 	url = https://github.com/plets-x1/Vfsm
 	branch = master
+[submodule "Components/Core/ControlUnit"]
+	path = Components/Core/ControlUnit
+	url = https://github.com/plets-x1/ControlUnit
+	branch = master
