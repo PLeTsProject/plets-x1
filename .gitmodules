@@ -42,3 +42,7 @@
 	path = Components/Core/ControlAndConversionStructures/ControlAndConversionStructures
 	url = https://github.com/plets-x1/ControlAndConversionStructures
 	branch = master
+[submodule "Components/Core/ControlStructure/ControlStructure"]
+	path = Components/Core/ControlStructure/ControlStructure
+	url = https://github.com/plets-x1/ControlStructure
+	branch = master
