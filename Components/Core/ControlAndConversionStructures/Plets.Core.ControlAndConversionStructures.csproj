@@ -6,7 +6,7 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Plets.Core.ControlStructure\Plets.Core.ControlStructure.csproj">
+    <ProjectReference Include="..\ControlStructure\Plets.Core.ControlStructure.csproj">
   </ProjectReference>
   </ItemGroup>
   <ItemGroup>

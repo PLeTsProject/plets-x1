@@ -50,3 +50,7 @@
 	path = Components/Core/FunctionalTestSet/FunctionalTestSet
 	url = https://github.com/plets-x1/FunctionalTestSet
 	branch = master
+[submodule "Components/Core/Graph"]
+	path = Components/Core/Graph
+	url = https://github.com/plets-x1/Graph
+	branch = master
