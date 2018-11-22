@@ -70,3 +70,7 @@
 	path = Components/Core/ControlUnit
 	url = https://github.com/plets-x1/ControlUnit
 	branch = master
+[submodule "Components/Core/ConversionUnit"]
+	path = Components/Core/ConversionUnit
+	url = https://github.com/plets-x1/ConversionUnit
+	branch = master
