@@ -38,3 +38,7 @@
 	path = Components/Blocks/ScriptGenerators/MTMScriptGenerator
 	url = https://github.com/plets-x1/MTMScriptGenerator
 	branch = master
+[submodule "Components/Core/ControlAndConversionStructures/ControlAndConversionStructures"]
+	path = Components/Core/ControlAndConversionStructures/ControlAndConversionStructures
+	url = https://github.com/plets-x1/ControlAndConversionStructures
+	branch = master
