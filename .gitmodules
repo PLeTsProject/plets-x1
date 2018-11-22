@@ -74,3 +74,9 @@
 	path = Components/Core/ConversionUnit
 	url = https://github.com/plets-x1/ConversionUnit
 	branch = master
+[submodule "Components/Shared/Csv"]
+	path = Components/Shared/Csv
+	url = https://github.com/plets-x1/Csv
+[submodule "Components/Shared/Xlsx"]
+	path = Components/Shared/Xlsx
+	url = https://github.com/plets-x1/Xlsx
