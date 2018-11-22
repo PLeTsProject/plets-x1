@@ -62,3 +62,7 @@
 	path = Components/Core/PerformanceTestSet
 	url = https://github.com/plets-x1/PerformanceTestSet
 	branch = master
+[submodule "Components/Core/Vfsm"]
+	path = Components/Core/Vfsm
+	url = https://github.com/plets-x1/Vfsm
+	branch = master
